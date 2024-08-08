@@ -642,39 +642,6 @@ void Visuals::OffScreen( Player* player, int alpha ) {
 		verts[ 0 ] = render::RotateVertex( offscreen_pos, verts[ 0 ], offscreen_rotation );
 		verts[ 1 ] = render::RotateVertex( offscreen_pos, verts[ 1 ], offscreen_rotation );
 		verts[ 2 ] = render::RotateVertex( offscreen_pos, verts[ 2 ], offscreen_rotation );
-		// verts_outline[ 0 ] = render::RotateVertex( offscreen_pos, verts_outline[ 0 ], offscreen_rotation );
-		// verts_outline[ 1 ] = render::RotateVertex( offscreen_pos, verts_outline[ 1 ], offscreen_rotation );
-		// verts_outline[ 2 ] = render::RotateVertex( offscreen_pos, verts_outline[ 2 ], offscreen_rotation );
-
-		// todo - dex; finish this, i want it.
-		// auto &damage_data = m_offscreen_damage[ player->index( ) ];
-		// 
-		// // the local player was damaged by another player recently.
-		// if( damage_data.m_time > 0.f ) {
-		//     // // only a small amount of time left, start fading into white again.
-		//     // if( damage_data.m_time < 1.f ) {
-		//     //     // calculate step needed to reach 255 in 1 second.
-		//     //     // float step = UINT8_MAX / ( 1000.f * g_csgo.m_globals->m_frametime );
-		//     //     float step = ( 1.f / g_csgo.m_globals->m_frametime ) / UINT8_MAX;
-		//     //     
-		//     //     // increment the new value for the color.
-		//     //     // if( damage_data.m_color_step < 255.f )
-		//     //         damage_data.m_color_step += step;
-		//     // 
-		//     //     math::clamp( damage_data.m_color_step, 0.f, 255.f );
-		//     // 
-		//     //     damage_data.m_color.g( ) = (uint8_t)damage_data.m_color_step;
-		//     //     damage_data.m_color.b( ) = (uint8_t)damage_data.m_color_step;
-		//     // }
-		//     // 
-		//     // g_cl.print( "%f %f %u %u %u\n", damage_data.m_time, damage_data.m_color_step, damage_data.m_color.r( ), damage_data.m_color.g( ), damage_data.m_color.b( ) );
-		//     
-		//     // decrement timer.
-		//     damage_data.m_time -= g_csgo.m_globals->m_frametime;
-		// }
-		// 
-		// else
-		//     damage_data.m_color = colors::white;
 
 		// render!
 		color = g_menu.main.players.offscreen_color.get( ); // damage_data.m_color;
@@ -682,9 +649,6 @@ void Visuals::OffScreen( Player* player, int alpha ) {
 
 		g_csgo.m_surface->DrawSetColor( color );
 		g_csgo.m_surface->DrawTexturedPolygon( 3, verts );
-
-		// g_csgo.m_surface->DrawSetColor( colors::black );
-		// g_csgo.m_surface->DrawTexturedPolyLine( 3, verts_outline );
 	}
 }
 

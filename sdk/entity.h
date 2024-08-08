@@ -956,10 +956,6 @@ public:
 
 		return false;
 	}
-	bool IsArmored( int nHitGroup );
-	float ScaleDamage( float flWpnArmorRatio, int group, float fDamage );
-	int FireBullet( vec3_t vecSrc, const ang_t& shootAngles, float flArmorRatio, float flDistance, float flPenetration, int& nPenetrationCount, int& iDamage, float flRangeModifier, Player* pVictim );
-	bool HandleBulletPenetration( float& flPenetration, int& iEnterMaterial, bool& hitGrate, CGameTrace& tr, vec3_t& vecDir, surfacedata_t* pSurfaceData, float flPenetrationModifier, float flDamageModifier, float flPenetrationPower, int& nPenetrationCount, vec3_t& vecSrc, float flDistance, float flCurrentDistance, float& fCurrentDamage );
 };
 
 class WeaponInfo {

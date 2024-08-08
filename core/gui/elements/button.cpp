@@ -15,8 +15,6 @@ void Button::draw( ) {
 					 p.y + 4, { 205, 205, 205, m_parent->m_alpha }, m_label, render::ALIGN_CENTER );
 }
 
-void Button::think( ) {}
-
 void Button::click( ) {
 	Rect  area{ m_parent->GetElementsRect( ) };
 	Point p{ area.x + m_pos.x, area.y + m_pos.y };

@@ -1,24 +1,24 @@
 #include "../../../includes.h"
 
 void Dropdown::draw_arrow( Point p, bool up ) {
-	// Define the starting point and offsets based on the arrow type
+	// define the starting point and offsets.
 	const std::tuple < int, int > start = { p.x + m_w - 11, p.y + m_offset + 9 };
 
-	// Define color
+	// define color.
 	const Color color = { 152, 152, 152, m_parent->m_alpha };
 
-	// Draw the rectangles
+	// draw the rectangles.
 	for ( int i = 0; i < 5; ++i ) {
-		// Draw the bottom row of rectangles
+		// draw the bottom row of rectangles.
 		render::rect_filled( std::get<0>( start ) + i, std::get<1>( start ) + ( up ? 2 : 0 ), 1, 1, color );
 	}
 
 	for ( int i = 0; i < 3; ++i ) {
-		// Draw the middle row of rectangles
+		// draw the middle row of rectangles.
 		render::rect_filled( std::get<0>( start ) + i + 1, std::get<1>( start ) + 1, 1, 1, color );
 	}
 
-	// Draw the top row rectangle
+	// draw the top row rectangle.
 	render::rect_filled( std::get<0>( start ) + 2, std::get<1>( start ) + ( up ? 0 : 2 ), 1, 1, color );
 }
 
@@ -74,8 +74,6 @@ void Dropdown::draw( ) {
 
 		render::menu.string( p.x + DROPDOWN_X_OFFSET + DROPDOWN_ITEM_X_OFFSET, p.y + m_offset + 4, { 152, 152, 152, m_parent->m_alpha }, GetActiveItem( ) );
 	}
-
-	//render::rect( p.x, p.y, m_w, m_pos.h, { 255, 0, 0 } );
 }
 
 void Dropdown::think( ) {

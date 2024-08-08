@@ -90,6 +90,11 @@ public:
 		return { tabs_area.x + tabs_area.w + 20, m_y + 20, m_width - tabs_area.w - 60, m_height - 40 };
 	}
 
+private:
+	__forceinline void update_opacity( );
+	__forceinline void draw_background( int x, int y, int width, int height, Color color );
+	__forceinline void draw_tabs( );
+	__forceinline void draw_elements( );
 public:
 	void draw( );
 };

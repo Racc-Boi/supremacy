@@ -24,6 +24,5 @@ protected:
 
 protected:
 	void draw( ) override;
-	void think( ) override;
 	void click( ) override;
 };

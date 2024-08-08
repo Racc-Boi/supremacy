@@ -1,6 +1,6 @@
 #include "../../../includes.h"
 
-void Form::draw( ) {
+void Form::update_opacity( ) {
 	// opacity should reach 1 in 500 milliseconds.
 	constexpr float frequency = 1.f / 0.5f;
 
@@ -15,75 +15,85 @@ void Form::draw( ) {
 	math::clamp( m_opacity, 0.f, 1.f );
 
 	m_alpha = 0xff * m_opacity;
-	if( !m_alpha )
-		return;
+}
 
-	// get gui color.
-	Color color = g_gui.m_color;
-	color.a( ) = m_alpha;
+void Form::draw_background( int x, int y, int width, int height, Color color ) {
+	// draw background.
+	render::rect_filled( x, y, width, height, color );
 
-	// background.
-	render::rect_filled( m_x, m_y, m_width, m_height, { 12, 12, 12, m_alpha } );
+	// border colors.
+	static const std::array<Color, 5> border_colors = {
+		Color{5, 5, 5, m_alpha},
+		Color{60, 60, 60, m_alpha},
+		Color{40, 40, 40, m_alpha},
+		Color{40, 40, 40, m_alpha},
+		Color{60, 60, 60, m_alpha}
+	};
 
-	// border.
-	render::rect( m_x, m_y, m_width, m_height, { 5, 5, 5, m_alpha } );
-	render::rect( m_x + 1, m_y + 1, m_width - 2, m_height - 2, { 60, 60, 60, m_alpha } );
-	render::rect( m_x + 2, m_y + 2, m_width - 4, m_height - 4, { 40, 40, 40, m_alpha } );
-	render::rect( m_x + 3, m_y + 3, m_width - 6, m_height - 6, { 40, 40, 40, m_alpha } );
-	render::rect( m_x + 4, m_y + 4, m_width - 8, m_height - 8, { 40, 40, 40, m_alpha } );
-	render::rect( m_x + 5, m_y + 5, m_width - 10, m_height - 10, { 60, 60, 60, m_alpha } );
-
-	// draw tabs if we have any.
-	if( !m_tabs.empty( ) ) {
-		// tabs background and border.
-		Rect tabs_area = GetTabsRect( );
-
-		render::rect_filled( tabs_area.x, tabs_area.y, tabs_area.w, tabs_area.h, { 17, 17, 17, m_alpha } );
-		render::rect( tabs_area.x, tabs_area.y, tabs_area.w, tabs_area.h, { 0, 0, 0, m_alpha } );
-		render::rect( tabs_area.x + 1, tabs_area.y + 1, tabs_area.w - 2, tabs_area.h - 2, { 48, 48, 48, m_alpha } );
-
-		for( size_t i{}; i < m_tabs.size( ); ++i ) {
-			const auto& t = m_tabs[ i ];
-
-			render::menu_shade.string( tabs_area.x + 10, tabs_area.y + 5 + ( i * 16 ),
-							 t == m_active_tab ? color : Color{ 152, 152, 152, m_alpha },
-							 t->m_title );
-		}
-
-		// this tab has elements.
-		if( !m_active_tab->m_elements.empty( ) ) {
-			// elements background and border.
-			Rect el = GetElementsRect( );
-
-			render::rect_filled( el.x, el.y, el.w, el.h, { 17, 17, 17, m_alpha } );
-			render::rect( el.x, el.y, el.w, el.h, { 0, 0, 0, m_alpha } );
-			render::rect( el.x + 1, el.y + 1, el.w - 2, el.h - 2, { 48, 48, 48, m_alpha } );
-
-            std::string date = XOR( __DATE__ );
-
-			std::string text = tfm::format( XOR( "%s | %s" ), date.c_str( ), g_cl.m_user );
-			render::menu_shade.string( el.x + el.w - 5, el.y + el.h - 16, { 205, 205, 205, m_alpha }, text, render::ALIGN_RIGHT );
-
-			// iterate elements to display.
-			for( const auto& e : m_active_tab->m_elements ) {
-
-				// draw the active element last.
-				if( !e || ( m_active_element && e == m_active_element ) )
-					continue;
-
-				if( !e->m_show )
-					continue;
-
-				// this element we dont draw.
-				if( !( e->m_flags & ElementFlags::DRAW ) )
-					continue;
-
-				e->draw( );
-			}
-
-			// we still have to draw one last fucker.
-			if( m_active_element && m_active_element->m_show )
-				m_active_element->draw( );
-		}
+	// draw border.
+	for ( int i = 0; i < border_colors.size( ); ++i ) {
+		render::rect( x + i, y + i, width - 2 * i, height - 2 * i, border_colors[ i ] );
 	}
+}
+
+void Form::draw_tabs( ) {
+	// check if we have any tabs.
+	if ( m_tabs.empty( ) ) return;
+
+	// get the tabs area.
+	Rect tabs_area = GetTabsRect( );
+
+	// draw the background.
+	draw_background( tabs_area.x, tabs_area.y, tabs_area.w, tabs_area.h, { 17, 17, 17, m_alpha } );
+
+	// iterate tabs.
+	for ( size_t i = 0; i < m_tabs.size( ); ++i ) {
+		// get the tab.
+		const auto& t = m_tabs[ i ];
+
+		// draw the tab title.
+		render::menu_shade.string( tabs_area.x + 10, tabs_area.y + 5 + ( i * 16 ),
+								   t == m_active_tab ? g_gui.m_color : Color{ 152, 152, 152, m_alpha },
+								   t->m_title );
+	}
+}
+
+void Form::draw_elements( ) {
+	// check if we have an active tab.
+	if ( m_active_tab->m_elements.empty( ) ) return;
+
+	// elements background and border.
+	Rect el = GetElementsRect( );
+
+	// draw the background.
+	draw_background( el.x, el.y, el.w, el.h, { 17, 17, 17, m_alpha } );
+
+	// draw the date and username.
+	std::string date = XOR( __DATE__ );
+	std::string text = tfm::format( XOR( "%s | %s" ), date.c_str( ), g_cl.m_user );
+	render::menu_shade.string( el.x + el.w - 5, el.y + el.h - 16, { 205, 205, 205, m_alpha }, text, render::ALIGN_RIGHT );
+
+	// iterate elements.
+	for ( const auto& e : m_active_tab->m_elements ) {
+		// skip elements that are not to be drawn.
+		if ( !e || ( m_active_element && e == m_active_element ) || !e->m_show || !( e->m_flags & ElementFlags::DRAW ) )
+			continue;
+
+		// draw the element.
+		e->draw( );
+	}
+
+	// draw the active element last.
+	if ( m_active_element && m_active_element->m_show )
+		m_active_element->draw( );
+}
+
+void Form::draw( ) {
+	update_opacity( );
+	if ( !m_alpha ) return;
+
+	draw_background( m_x, m_y, m_width, m_height, { 12, 12, 12, m_alpha } );
+
+	draw_tabs( );
+	draw_elements( );
 }

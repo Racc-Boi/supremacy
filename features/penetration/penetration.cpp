@@ -314,37 +314,44 @@ bool penetration::run( PenetrationInput_t* in, PenetrationOutput_t* out ) {
     // we need to get a damage trace
     if ( in->m_target ) {
         if ( iHitgroup > HITGROUP_GENERIC ) {
-
             out->m_damage = iDamage;
             out->m_hitgroup = iHitgroup;
-            out->m_pen = iPenCount;
+            out->m_pen = iPenCount != 4;
 			out->m_target = in->m_target;
 
             if ( iDamage > in->m_target->m_iHealth( ) )
                 return true;
 
+			// penetration damage.
             if ( iPenCount != 4 )
                 return ( iDamage >= in->m_damage_pen );
 
+			// no penetration damage.
             return ( iDamage >= in->m_damage );
         }
 
+		// reset values if we didn't hit anything.
         out->m_damage = -1.f;
         out->m_hitgroup = -1;
         out->m_pen = iPenCount;
+        out->m_penetration_count = iPenCount;
         return false;
     }
     else {
+        // if pen count is 4 we can't penetrate anything.
         out->m_target = trace.m_entity->as< Player* >( );
         out->m_damage = iDamage;
         out->m_hitgroup = iHitgroup;
-        out->m_pen = iPenCount;
+        out->m_pen = iPenCount != 4;
+        out->m_penetration_count = iPenCount;
 
-        if ( iPenCount == 4 )
-            return false;
+        // penetration damage.
+        if ( iPenCount != 4 )
+            return ( iDamage >= in->m_damage_pen );
+
+        // no penetration damage.
+        return ( iDamage >= in->m_damage );
     }
-
-	g_notify.add( tfm::format( XOR( "damage: %i, hitgroup: %i, penetration: %i" ), iDamage, iHitgroup, iPenCount ) );
 
     return ( iDamage > 0.f );
 }

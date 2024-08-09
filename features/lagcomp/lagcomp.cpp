@@ -329,7 +329,6 @@ void LagCompensation::AirAccelerate( LagRecord* record, ang_t angle, float fmove
 	wishspeed = wishdir.normalize( );
 
 	// get maxspeed.
-	// TODO; maybe global this or whatever its 260 anyway always.
 	maxspeed = record->m_player->m_flMaxspeed( );
 
 	// clamp to server defined max speed.

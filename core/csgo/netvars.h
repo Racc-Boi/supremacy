@@ -153,7 +153,6 @@ public:
 
 	// get netvar proxy.
 	__forceinline RecvVarProxy_t GetProxy( hash32_t table, hash32_t prop, RecvVarProxy_t proxy ) {
-		// todo - dex; should we return null here if m_is_valid_netvar is false? probably doesn't matter anyway.
 		return m_offsets[ table ][ prop ].m_prop_ptr->m_ProxyFn;
 	}
 

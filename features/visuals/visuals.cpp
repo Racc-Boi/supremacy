@@ -413,9 +413,6 @@ void Visuals::PenetrationCrosshair( ) {
 	else
 		final_color = colors::transparent_red;
 
-	// todo - dex; use fmt library to get damage string here?
-	//             draw damage string?
-
 	// damage
 	std::string damage = tfm::format( XOR( "%i" ), ( int )g_cl.m_pen_data.m_damage );
 

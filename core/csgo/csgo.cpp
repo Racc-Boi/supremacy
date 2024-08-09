@@ -17,13 +17,11 @@ bool CSGO::init( ) {
 	// "serverbrowser.dll" is the last module to be loaded.
 	// if it gets loaded we can be ensured that the entire game done loading.
 
-#ifndef KOLO
 	while( !m_serverbrowser_dll ) {
 		m_serverbrowser_dll = PE::GetModule( HASH( "serverbrowser.dll" ) );
 		if( !m_serverbrowser_dll )
 			std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	}
-#endif
 
 	// grab some modules.
 	m_kernel32_dll = PE::GetModule( HASH( "kernel32.dll" ) );

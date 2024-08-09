@@ -80,7 +80,7 @@ void Grenades::paint( ) {
 			float damage = 105.f * std::exp( -d * d );
 
 			// scale damage.
-			damage = penetration::scale( player, damage, g_cl.m_weapon_info->m_armor_ratio, HITGROUP_CHEST );
+			damage = player->ScaleDamage( g_cl.m_weapon_info->m_armor_ratio, HITGROUP_CHEST, damage );
 
 			// clip max damage.
 			damage = std::min( damage, ( player->m_ArmorValue( ) > 0 ) ? 57.f : 98.f );

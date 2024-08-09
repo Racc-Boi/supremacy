@@ -127,7 +127,6 @@ void Client::StartMove( CUserCmd* cmd ) {
 		return;
 
 	// store max choke
-	// TODO; 11 -> m_bIsValveDS
 	m_max_lag = ( m_local->m_fFlags( ) & FL_ONGROUND ) ? 16 : 15;
 	m_lag = g_csgo.m_cl->m_choked_commands;
 	m_lerp = game::GetClientInterpAmount( );
@@ -316,7 +315,7 @@ void Client::EndMove( CUserCmd* cmd ) {
 }
 
 void Client::OnTick( CUserCmd* cmd ) {
-	// TODO; add this to the menu.
+	// rank revealer.
 	if( g_menu.main.misc.ranks.get( ) && cmd->m_buttons & IN_SCORE ) {
 		static CCSUsrMsg_ServerRankRevealAll msg{ };
 		g_csgo.ServerRankRevealAll( &msg );

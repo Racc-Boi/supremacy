@@ -118,6 +118,9 @@ void Force_proxy( CRecvProxyData *data, Address ptr, Address out ) {
 }
 
 void Hooks::init( ) {
+	// register our custom entity listener.
+	g_custom_entity_listener.init( );
+
 	// hook wndproc.
 	m_old_wndproc = ( WNDPROC )g_winapi.SetWindowLongA( g_csgo.m_game->m_hWindow, GWL_WNDPROC, util::force_cast< LONG >( Hooks::WndProc ) );
 
@@ -182,10 +185,6 @@ void Hooks::init( ) {
 
 	m_client_state.init( g_csgo.m_hookable_cl );
 	m_client_state.add( CClientState::TEMPENTITIES, util::force_cast( &Hooks::TempEntities ) );
-
-	// register our custom entity listener.
-	// todo - dex; should we push our listeners first? should be fine like this.
-	g_custom_entity_listener.init( );
 
 	// cvar hooks.
 	m_debug_spread.init( g_csgo.net_showfragments );

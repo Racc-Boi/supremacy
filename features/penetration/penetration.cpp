@@ -320,9 +320,6 @@ bool penetration::run( PenetrationInput_t* in, PenetrationOutput_t* out ) {
             out->m_pen = iPenCount;
 			out->m_target = in->m_target;
 
-            player_info_t info;
-			g_csgo.m_engine->GetPlayerInfo( in->m_target->index( ), &info );
-
             if ( iDamage > in->m_target->m_iHealth( ) )
                 return true;
 

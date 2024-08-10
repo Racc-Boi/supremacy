@@ -309,16 +309,19 @@ bool penetration::run( PenetrationInput_t* in, PenetrationOutput_t* out ) {
                                                   iPenCount,
                                                   iDamage,
                                                   weapon_info->m_range_modifier,
-                                                  in->m_target );
+                                                  in->m_target,
+                                                  trace );
 
     // we need to get a damage trace
     if ( in->m_target ) {
         if ( iHitgroup > HITGROUP_GENERIC ) {
-
             out->m_damage = iDamage;
             out->m_hitgroup = iHitgroup;
             out->m_pen = iPenCount;
 			out->m_target = in->m_target;
+
+            player_info_t info;
+			g_csgo.m_engine->GetPlayerInfo( in->m_target->index( ), &info );
 
             if ( iDamage > in->m_target->m_iHealth( ) )
                 return true;
@@ -334,17 +337,28 @@ bool penetration::run( PenetrationInput_t* in, PenetrationOutput_t* out ) {
         out->m_pen = iPenCount;
         return false;
     }
+    // target for g_cl.m_pen_data will always be false/nullptr so for pen crosshair we need to trace a target
     else {
-        out->m_target = trace.m_entity->as< Player* >( );
-        out->m_damage = iDamage;
-        out->m_hitgroup = iHitgroup;
         out->m_pen = iPenCount;
 
-        if ( iPenCount == 4 )
-            return false;
-    }
+        if ( iHitgroup > HITGROUP_GENERIC ) {
+            out->m_damage = iDamage;
+            out->m_hitgroup = iHitgroup;
+            out->m_pen = iPenCount;
+            out->m_target = trace.m_entity->as<Player*>( );
 
-	g_notify.add( tfm::format( XOR( "damage: %i, hitgroup: %i, penetration: %i" ), iDamage, iHitgroup, iPenCount ) );
+            if ( iDamage > trace.m_entity->as<Player*>( )->m_iHealth( ) )
+                return true;
+
+            if ( iPenCount != 4 )
+                return ( iDamage >= in->m_damage_pen );
+
+            return ( iDamage >= in->m_damage );
+        }
+
+		// note don't reset the damage values here, otherwise with pen crosshair it will just show as -1 isntead of the max damage our weapon can do :)
+        return false;
+    }
 
     return ( iDamage > 0.f );
 }
@@ -358,7 +372,8 @@ int Player::FireBullet(
     int& nPenetrationCount,
     int& iDamage, // base damage
     float flRangeModifier, // damage range modifier
-    Player* pVictim ) {
+    Player* pVictim,
+    CGameTrace& tr ) {
 
     // Check for player hitboxes extending outside their collision bounds
     constexpr float rayExtension = 40.0f;
@@ -379,7 +394,7 @@ int Player::FireBullet(
 
     int iHitgroup = -1;
     Player* lastPlayerHit = NULL;    // this includes players, bots, and hostages
-    CGameTrace tr; // main enter bullet trace
+    //CGameTrace tr; // main enter bullet trace
 
     while ( fCurrentDamage > 0.f ) {
         const vec3_t vecEnd = vecSrc + vecDir * ( flDistance - flCurrentDistance );
@@ -414,8 +429,8 @@ int Player::FireBullet(
              && tr.m_entity->index( ) <= 64 ) {
              // NOTE: inaccurate if there's players inside of each other
             if ( !pVictim || tr.m_entity->index( ) == pVictim->index( ) ) {
-                if ( ( ( Player* )tr.m_entity )->enemy( this ) ) {
-                    lastPlayerHit = ( Player* )tr.m_entity;
+                if ( tr.m_entity->as< Player* >( )->enemy( this ) ) {
+                    lastPlayerHit = tr.m_entity->as< Player* >( );
                     iHitgroup = tr.m_hitgroup;
                     break;
                 }
@@ -451,7 +466,7 @@ int Player::FireBullet(
     // hit a player.
     if ( lastPlayerHit != NULL ) {
         // report damage and hitgroup.
-        iDamage = std::max( 0, static_cast<int>(lastPlayerHit->ScaleDamage( flArmorRatio, iHitgroup, fCurrentDamage ) ) );
+        iDamage = std::max( 0, static_cast< int >( lastPlayerHit->ScaleDamage( flArmorRatio, iHitgroup, fCurrentDamage ) ) );
         return iHitgroup;
     }
     else {

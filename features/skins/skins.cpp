@@ -589,7 +589,7 @@ void Skins::UpdateItem( Weapon* item ) {
 void Skins::UpdateAnimations( Entity* ent ) {
 	int knife = g_menu.main.skins.knife.get( );
 
-	int seq = ent->m_nSequence( );
+	int seq = ent->m_nPredictedViewModelSequence( );
 
 	// check if this knife needs extra fixing.
 	if( knife == knives_t::BUTTERFLY || knife == knives_t::FALCHION || knife == knives_t::DAGGER || knife == knives_t::BOWIE ) {
@@ -597,7 +597,7 @@ void Skins::UpdateAnimations( Entity* ent ) {
 		// fix the idle sequences.
 		if( seq == sequence_default_idle1 || seq == sequence_default_idle2 ) {
 			// set the animation to be completed.
-			ent->m_flCycle( ) = 0.999f;
+			ent->m_flPlayerCycle( ) = 0.999f;
 
 			// cycle change, re-render.
 			ent->InvalidatePhysicsRecursive( ANIMATION_CHANGED );
@@ -670,5 +670,5 @@ void Skins::UpdateAnimations( Entity* ent ) {
 	}
 
 	// write back fixed sequence.
-	ent->m_nSequence( ) = seq;
+	ent->m_nPredictedViewModelSequence( ) = seq;
 }

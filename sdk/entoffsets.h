@@ -32,8 +32,8 @@ public:
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_vecMins;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_vecMaxs;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_iTeamNum;
-    XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_nSequence;
-    XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_flCycle;
+    XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_nPredictedViewModelSequence;
+    XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_flPlayerCycle;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_flC4Blow;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_bBombTicking;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_hPlayer;
@@ -137,8 +137,8 @@ public:
         INIT_XOREDNETVAR( m_vecMins,                    HASH( "DT_BaseEntity" ),           HASH( "m_vecMins" ) );
         INIT_XOREDNETVAR( m_vecMaxs,                    HASH( "DT_BaseEntity" ),           HASH( "m_vecMaxs" ) );
         INIT_XOREDNETVAR( m_iTeamNum,                   HASH( "DT_BaseEntity" ),           HASH( "m_iTeamNum" ) );
-        INIT_XOREDNETVAR( m_nSequence,                  HASH( "DT_PredictedViewModel" ),   HASH( "m_nSequence" ) );
-        INIT_XOREDNETVAR( m_flCycle,                    HASH( "DT_CSPlayer" ),             HASH( "m_flCycle" ) );
+        INIT_XOREDNETVAR( m_nPredictedViewModelSequence,HASH( "DT_PredictedViewModel" ),   HASH( "m_nSequence" ) );
+        INIT_XOREDNETVAR( m_flPlayerCycle,              HASH( "DT_CSPlayer" ),             HASH( "m_flCycle" ) );
         INIT_XOREDNETVAR( m_flC4Blow,                   HASH( "DT_PlantedC4" ),            HASH( "m_flC4Blow" ) );
         INIT_XOREDNETVAR( m_bBombTicking,               HASH( "DT_PlantedC4" ),            HASH( "m_bBombTicking" ) );
         INIT_XOREDNETVAR( m_nModelIndex,                HASH( "DT_BasePlayer" ),           HASH( "m_nModelIndex" ) );
@@ -165,7 +165,7 @@ public:
         INIT_XOREDNETVAR( m_bDucking,                   HASH( "DT_CSPlayer" ),             HASH( "m_bDucking" ) );
         INIT_XOREDNETVAR( m_bSpotted,                   HASH( "DT_BaseEntity" ),           HASH( "m_bSpotted" ) );
         INIT_XOREDNETVAR( m_iObserverMode,              HASH( "DT_BasePlayer" ),           HASH( "m_iObserverMode" ) );
-        INIT_XOREDNETVAR( m_ArmorValue,                 HASH( "DT_BasePlayer" ),           HASH( "m_ArmorValue" ) );
+        INIT_XOREDNETVAR( m_ArmorValue,                 HASH( "DT_CSPlayer" ),             HASH( "m_ArmorValue" ) );
         INIT_XOREDNETVAR( m_flMaxspeed,                 HASH( "DT_BasePlayer" ),           HASH( "m_flMaxspeed" ) );
         INIT_XOREDNETVAR( m_surfaceFriction,            HASH( "C_BasePlayer" ),            HASH( "m_surfaceFriction" ) );
         INIT_XOREDNETVAR( m_angEyeAngles,               HASH( "DT_CSPlayer" ),             HASH( "m_angEyeAngles" ) );

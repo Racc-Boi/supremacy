@@ -255,12 +255,12 @@ public:
 		return get< int >(g_entoffsets.m_iTeamNum);
 	}
 
-	__forceinline int &m_nSequence() {
-		return get< int >(g_entoffsets.m_nSequence);
+	__forceinline int &m_nPredictedViewModelSequence() {
+		return get< int >(g_entoffsets.m_nPredictedViewModelSequence );
 	}
 
-	__forceinline float &m_flCycle() {
-		return get< float >(g_entoffsets.m_flCycle);
+	__forceinline float &m_flPlayerCycle() {
+		return get< float >(g_entoffsets.m_flPlayerCycle );
 	}
 
 	__forceinline float &m_flC4Blow() {

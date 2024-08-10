@@ -15,7 +15,6 @@ namespace penetration {
 		float   m_damage;
 		int     m_hitgroup;
 		bool    m_pen;
-		int		m_penetration_count;
 
 		__forceinline PenetrationOutput_t( ) : m_target{ nullptr }, m_damage{ 0.f }, m_hitgroup{ -1 }, m_pen{ false } { }
 	};

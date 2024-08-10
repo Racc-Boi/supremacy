@@ -393,6 +393,7 @@ void Visuals::SpreadCrosshair( ) {
 
 void Visuals::PenetrationCrosshair( ) {
 	int   x, y;
+	bool  valid_player_hit;
 	Color final_color;
 
 	if( !g_menu.main.visuals.pen_crosshair.get( ) || !g_cl.m_processing )
@@ -401,11 +402,16 @@ void Visuals::PenetrationCrosshair( ) {
 	x = g_cl.m_width / 2;
 	y = g_cl.m_height / 2;
 
-	// green if no pen, yellow if pen and can damage target, red if pen but cant damage target.
-	if ( g_cl.m_pen_data.m_pen )
-		final_color = g_cl.m_pen_data.m_penetration_count != 4 ? colors::transparent_yellow : colors::transparent_red;
-	else
+
+	valid_player_hit = ( g_cl.m_pen_data.m_target && g_cl.m_pen_data.m_target->enemy( g_cl.m_local ) );
+	if( valid_player_hit )
+		final_color = colors::transparent_yellow;
+
+	else if( g_cl.m_pen_data.m_pen )
 		final_color = colors::transparent_green;
+
+	else
+		final_color = colors::transparent_red;
 
 	// damage
 	std::string damage = tfm::format( XOR( "%i" ), ( int )g_cl.m_pen_data.m_damage );

@@ -236,23 +236,6 @@ namespace game {
 		func(state);
 	}
 
-	__forceinline void UTIL_ClipTraceToPlayers(const vec3_t &start, const vec3_t &end, uint32_t mask, ITraceFilter *filter, CGameTrace *tr, float range) {
-		static auto func = pattern::find(g_csgo.m_client_dll, XOR("E8 ? ? ? ? 83 C4 14 8A 56 37")).rel32< uintptr_t >(0x1);
-		if (!func)
-			return;
-
-		__asm {
-			mov  ecx, start
-			mov	 edx, end
-			push range
-			push tr
-			push filter
-			push mask
-			call func
-			add	 esp, 16
-		}
-	}
-
 	__forceinline void ConcatTransforms(const matrix3x4_t &in1, const matrix3x4_t &in2, matrix3x4_t &output) {
 		static auto func = pattern::find(g_csgo.m_client_dll, XOR("E8 ? ? ? ? 0F 28 44 24")).rel32< uintptr_t >(0x1);
 		if (!func)

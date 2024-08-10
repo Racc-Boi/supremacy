@@ -337,11 +337,10 @@ bool penetration::run( PenetrationInput_t* in, PenetrationOutput_t* out ) {
     // target for g_cl.m_pen_data will always be false/nullptr so for pen crosshair we need to trace a target
     else {
         out->m_pen = iPenCount;
+        out->m_damage = iDamage;
 
         if ( iHitgroup > HITGROUP_GENERIC ) {
-            out->m_damage = iDamage;
             out->m_hitgroup = iHitgroup;
-            out->m_pen = iPenCount;
             out->m_target = trace.m_entity->as<Player*>( );
 
             if ( iDamage > trace.m_entity->as<Player*>( )->m_iHealth( ) )
@@ -460,14 +459,14 @@ int Player::FireBullet(
             break;
     }
 
+    // report weapon damage.
+    iDamage = std::max( 0, static_cast< int >( tr.m_entity->as< Player* >( )->ScaleDamage( flArmorRatio, -1, fCurrentDamage ) ) );
+
     // hit a player.
     if ( lastPlayerHit != NULL ) {
         // report damage and hitgroup.
         iDamage = std::max( 0, static_cast< int >( lastPlayerHit->ScaleDamage( flArmorRatio, iHitgroup, fCurrentDamage ) ) );
         return iHitgroup;
-    }
-    else {
-        iDamage = std::max( 0, static_cast< int >( tr.m_entity->as< Player* >( )->ScaleDamage( flArmorRatio, -1, fCurrentDamage ) ) );
     }
 
     // we hit nothing or our bullet got stopped.

@@ -189,8 +189,8 @@ public:
         INIT_XOREDNETVAR( m_flThrowStrength,            HASH( "DT_BaseCSGrenade" ),        HASH( "m_flThrowStrength" ) );
         INIT_XOREDNETVAR( m_fNextBurstShot,             HASH( "CWeaponCSBaseGun" ),        HASH( "m_fNextBurstShot" ) );
         INIT_XOREDNETVAR( m_zoomLevel,                  HASH( "CWeaponCSBaseGun" ),        HASH( "m_zoomLevel" ) );
-        INIT_XOREDNETVAR( m_flRecoilIndex,              HASH( "DT_WeaponNegev" ),          HASH( "m_flRecoilIndex" ) );
-        INIT_XOREDNETVAR( m_weaponMode,                 HASH( "CWeaponCSBase" ),           HASH( "m_weaponMode" ) );
+        INIT_XOREDNETVAR( m_flRecoilIndex,              HASH( "DT_WeaponCSBase" ),         HASH( "m_flRecoilIndex" ) );
+        INIT_XOREDNETVAR( m_weaponMode,                 HASH( "DT_WeaponCSBase" ),         HASH( "m_weaponMode" ) );
         INIT_XOREDNETVAR( m_nFallbackPaintKit,          HASH( "DT_BaseAttributableItem" ), HASH( "m_nFallbackPaintKit" ) );
         INIT_XOREDNETVAR( m_nFallbackStatTrak,          HASH( "DT_BaseAttributableItem" ), HASH( "m_nFallbackStatTrak" ) );
         INIT_XOREDNETVAR( m_nFallbackSeed,              HASH( "DT_BaseAttributableItem" ), HASH( "m_nFallbackSeed" ) );

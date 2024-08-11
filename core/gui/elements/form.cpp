@@ -31,7 +31,7 @@ void Form::draw_background( int x, int y, int width, int height, Color color ) {
 	};
 
 	// draw border.
-	for ( int i = 0; i < border_colors.size( ); ++i ) {
+	for ( size_t i = 0; i < border_colors.size( ); ++i ) {
 		render::rect( x + i, y + i, width - 2 * i, height - 2 * i, border_colors[ i ] );
 	}
 }

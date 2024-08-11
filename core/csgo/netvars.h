@@ -1,10 +1,32 @@
 #pragma once
 
+#define NetvarToFile 0
+#if NetvarToFile
+__forceinline void writeNetvarsToFile( const std::vector<std::string>& netvars ) {
+	if ( netvars.empty( ) ) {
+		return;
+	}
+
+	std::filesystem::create_directory( XOR( "C:\\netvars" ) );
+
+	std::ofstream file( XOR( "C:\\netvars\\netvars.txt" ) );
+
+	if ( !file.is_open( ) ) {
+		return;
+	}
+
+	for ( const auto& netvar : netvars ) {
+		file << netvar << std::endl;
+	}
+
+	file.close( );
+}
+#endif
 class Netvars {
 private:
 	struct NetvarData {
 		bool        m_datamap_var; // we can't do proxies on stuff from datamaps :).
-		RecvProp    *m_prop_ptr;
+		RecvProp* m_prop_ptr;
 		size_t      m_offset;
 
 		__forceinline NetvarData( ) : m_datamap_var{}, m_prop_ptr{}, m_offset{} { }
@@ -20,76 +42,87 @@ private:
 
 public:
 	// ctor.
-    Netvars( ) : m_offsets{} {}
+	Netvars( ) : m_offsets{} { }
 
-    void init( ) {
-		ClientClass *list;
+	void init( ) {
+		ClientClass* list;
 
 		// sanity check on client.
-		if( !g_csgo.m_client )
+		if ( !g_csgo.m_client )
 			return;
 
 		// grab linked list.
 		list = g_csgo.m_client->GetAllClasses( );
-		if( !list )
+		if ( !list )
 			return;
 
+		std::vector<std::string> netvars;
+
 		// iterate list of netvars.
-		for( ; list != nullptr; list = list->m_pNext )
+		for ( ; list != nullptr; list = list->m_pNext ) {
 			StoreDataTable( list->m_pRecvTable->m_pNetTableName, list->m_pRecvTable );
 
+			// store netvar information to a vector.
+			for ( int i{}; i < list->m_pRecvTable->m_nProps; ++i ) {
+				RecvProp* prop = &list->m_pRecvTable->m_pProps[ i ];
+				netvars.push_back( list->m_pRecvTable->m_pNetTableName + std::string( XOR( "->" ) ) + prop->m_pVarName );
+			}
+		}
+#if NetvarToFile
+		writeNetvarsToFile( netvars );
+#endif
 		// find all datamaps
 		FindAndStoreDataMaps( );
 	}
 
 	// dtor.
-    ~Netvars( ) {
+	~Netvars( ) {
 		m_offsets.clear( );
 	}
 
 	// gather all classids dynamically on runtime.
-    void SetupClassData( ) {
-		ClientClass *list;
+	void SetupClassData( ) {
+		ClientClass* list;
 
 		// clear old shit.
 		m_client_ids.clear( );
 
 		// sanity check on client.
-		if( !g_csgo.m_client )
+		if ( !g_csgo.m_client )
 			return;
 
 		// grab linked list.
 		list = g_csgo.m_client->GetAllClasses( );
-		if( !list )
+		if ( !list )
 			return;
 
 		// iterate list.
-		for( ; list != nullptr; list = list->m_pNext )
+		for ( ; list != nullptr; list = list->m_pNext )
 			m_client_ids[ FNV1a::get( list->m_pNetworkName ) ] = list->m_ClassID;
 	}
 
 	void StoreDataTable( const std::string& name, RecvTable* table, size_t offset = 0 ) {
 		hash32_t	var, base{ FNV1a::get( name ) };
-		RecvProp*   prop;
-		RecvTable*  child;
+		RecvProp* prop;
+		RecvTable* child;
 
 		// iterate props
-		for( int i{}; i < table->m_nProps; ++i ) {
+		for ( int i{}; i < table->m_nProps; ++i ) {
 			prop = &table->m_pProps[ i ];
 			child = prop->m_pDataTable;
 
 			// we have a child table, that contains props.
-			if( child && child->m_nProps > 0 )
+			if ( child && child->m_nProps > 0 )
 				StoreDataTable( name, child, prop->m_Offset + offset );
 
 			// hash var name.
 			var = FNV1a::get( prop->m_pVarName );
 
 			// insert if not present.
-			if( !m_offsets[ base ][ var ].m_offset ) {
+			if ( !m_offsets[ base ][ var ].m_offset ) {
 				m_offsets[ base ][ var ].m_datamap_var = false;
-				m_offsets[ base ][ var ].m_prop_ptr    = prop;
-				m_offsets[ base ][ var ].m_offset      = ( size_t )( prop->m_Offset + offset );
+				m_offsets[ base ][ var ].m_prop_ptr = prop;
+				m_offsets[ base ][ var ].m_offset = ( size_t )( prop->m_Offset + offset );
 			}
 		}
 	}
@@ -99,49 +132,49 @@ public:
 		pattern::patterns_t matches{};
 
 		// sanity.
-		if( !g_csgo.m_client_dll )
+		if ( !g_csgo.m_client_dll )
 			return;
 
 		matches = pattern::FindAll( g_csgo.m_client_dll, XOR( "C7 05 ? ? ? ? ? ? ? ? C7 05 ? ? ? ? ? ? ? ? C3 CC" ) );
-		if( matches.empty( ) )
+		if ( matches.empty( ) )
 			return;
 
-		for( auto& m : matches )
+		for ( auto& m : matches )
 			StoreDataMap( m );
 	}
 
 	void StoreDataMap( Address ptr ) {
-		datamap_t*          map;
+		datamap_t* map;
 		hash32_t            base, var;
-		typedescription_t*  entry;
+		typedescription_t* entry;
 
 		// get datamap and verify.
 		map = ptr.at( 2 ).sub( 4 ).as< datamap_t* >( );
 
-		if( !map || !map->m_size || map->m_size > 200 || !map->m_desc || !map->m_name )
+		if ( !map || !map->m_size || map->m_size > 200 || !map->m_desc || !map->m_name )
 			return;
 
 		// hash table name.
 		base = FNV1a::get( map->m_name );
 
-		for( int i{}; i < map->m_size; ++i ) {
+		for ( int i{}; i < map->m_size; ++i ) {
 			entry = &map->m_desc[ i ];
-			if( !entry->m_name )
+			if ( !entry->m_name )
 				continue;
 
 			// hash var name.
 			var = FNV1a::get( entry->m_name );
 
 			// if we dont have this var stored yet.
-			if( !m_offsets[ base ][ var ].m_offset ) {
+			if ( !m_offsets[ base ][ var ].m_offset ) {
 				m_offsets[ base ][ var ].m_datamap_var = true;
-				m_offsets[ base ][ var ].m_offset      = ( size_t )entry->m_offset[ TD_OFFSET_NORMAL ];
-				m_offsets[ base ][ var ].m_prop_ptr    = nullptr;
+				m_offsets[ base ][ var ].m_offset = ( size_t )entry->m_offset[ TD_OFFSET_NORMAL ];
+				m_offsets[ base ][ var ].m_prop_ptr = nullptr;
 			}
 		}
 	}
 
-    // get client id.
+	// get client id.
 	__forceinline int GetClientID( hash32_t network_name ) {
 		return m_client_ids[ network_name ];
 	}
@@ -157,17 +190,17 @@ public:
 	}
 
 	// set netvar proxy.
-	__forceinline void SetProxy( hash32_t table, hash32_t prop, void* proxy, RecvVarProxy_t &original ) {
+	__forceinline void SetProxy( hash32_t table, hash32_t prop, void* proxy, RecvVarProxy_t& original ) {
 		auto netvar_entry = m_offsets[ table ][ prop ];
 
 		// we can't set a proxy on a datamap.
-		if( netvar_entry.m_datamap_var )
+		if ( netvar_entry.m_datamap_var )
 			return;
 
-        // save original.
+		// save original.
 		original = netvar_entry.m_prop_ptr->m_ProxyFn;
 
-        // redirect.
+		// redirect.
 		netvar_entry.m_prop_ptr->m_ProxyFn = ( RecvVarProxy_t )proxy;
 	}
 };

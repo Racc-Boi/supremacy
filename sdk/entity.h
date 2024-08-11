@@ -1124,10 +1124,6 @@ public:
 		return get< int >(g_entoffsets.m_Activity);
 	}
 
-	__forceinline float &m_fFireDuration() {
-		return get< float >(g_entoffsets.m_fFireDuration);
-	}
-
 	__forceinline int &m_iBurstShotsRemaining() {
 		return get< int >(g_entoffsets.m_iBurstShotsRemaining);
 	}

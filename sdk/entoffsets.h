@@ -48,7 +48,6 @@ public:
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_iAccount;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_bHasDefuser;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_nHitboxSet;
-    XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_angAbsRotation;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_angRotation;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_angNetworkAngles;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_nTickBase;
@@ -149,7 +148,6 @@ public:
         INIT_XOREDNETVAR( m_iAccount,                   HASH( "DT_CSPlayer" ),             HASH( "m_iAccount" ) );
         INIT_XOREDNETVAR( m_bHasDefuser,                HASH( "DT_CSPlayer" ),             HASH( "m_bHasDefuser" ) );
         INIT_XOREDNETVAR( m_nHitboxSet,                 HASH( "DT_BaseAnimating" ),        HASH( "m_nHitboxSet" ) );
-        INIT_XOREDNETVAR( m_angAbsRotation,             HASH( "C_BaseEntity" ),            HASH( "m_angAbsRotation" ) );
         INIT_XOREDNETVAR( m_angRotation,                HASH( "C_BaseEntity" ),            HASH( "m_angRotation" ) );
         INIT_XOREDNETVAR( m_angNetworkAngles,           HASH( "C_BaseEntity" ),            HASH( "m_angNetworkAngles" ) );
         INIT_XOREDNETVAR( m_nTickBase,                  HASH( "DT_CSPlayer" ),             HASH( "m_nTickBase" ) );

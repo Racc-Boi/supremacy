@@ -1,25 +1,27 @@
 #pragma once
 
-#define NetvarToFile 0
-#if NetvarToFile
-__forceinline void writeNetvarsToFile( const std::vector<std::string>& netvars ) {
-	if ( netvars.empty( ) ) {
+#define PropsToFile 1
+#if PropsToFile
+__forceinline void WritePropsToFile( const std::vector<std::string>& m_prop_data, const char* m_file_name ) {
+	if ( m_prop_data.empty( ) ) {
 		return;
 	}
 
-	std::filesystem::create_directory( XOR( "C:\\netvars" ) );
+	std::filesystem::create_directory( "C:\\supremacy\\" );
 
-	std::ofstream file( XOR( "C:\\netvars\\netvars.txt" ) );
+	std::string m_file_path = "C:\\supremacy\\" + std::string( m_file_name ) + XOR( ".txt" );
 
-	if ( !file.is_open( ) ) {
+	std::ofstream m_file( m_file_path.c_str( ) );
+
+	if ( !m_file.is_open( ) ) {
 		return;
 	}
 
-	for ( const auto& netvar : netvars ) {
-		file << netvar << std::endl;
+	for ( const auto& m_props : m_prop_data ) {
+		m_file << m_props << std::endl;
 	}
 
-	file.close( );
+	m_file.close( );
 }
 #endif
 class Netvars {
@@ -39,7 +41,10 @@ private:
 		std::unordered_map< hash32_t,	// hash key + props
 		NetvarData						// prop offset / prop ptr
 		> > m_offsets;
-
+#if PropsToFile
+	std::vector<std::string> m_netvars;
+	std::vector<std::string> m_datamaps;
+#endif
 public:
 	// ctor.
 	Netvars( ) : m_offsets{} { }
@@ -56,23 +61,25 @@ public:
 		if ( !list )
 			return;
 
-		std::vector<std::string> netvars;
-
 		// iterate list of netvars.
 		for ( ; list != nullptr; list = list->m_pNext ) {
 			StoreDataTable( list->m_pRecvTable->m_pNetTableName, list->m_pRecvTable );
-
+#if PropsToFile
 			// store netvar information to a vector.
 			for ( int i{}; i < list->m_pRecvTable->m_nProps; ++i ) {
 				RecvProp* prop = &list->m_pRecvTable->m_pProps[ i ];
-				netvars.push_back( list->m_pRecvTable->m_pNetTableName + std::string( XOR( "->" ) ) + prop->m_pVarName );
+				m_netvars.push_back( list->m_pRecvTable->m_pNetTableName + std::string( XOR( "->" ) ) + prop->m_pVarName );
 			}
+#endif
 		}
-#if NetvarToFile
-		writeNetvarsToFile( netvars );
+#if PropsToFile
+		WritePropsToFile( m_netvars, XOR( "netvars" ) );
 #endif
 		// find all datamaps
 		FindAndStoreDataMaps( );
+#if PropsToFile
+		WritePropsToFile( m_datamaps, XOR( "datamaps" ) );
+#endif
 	}
 
 	// dtor.
@@ -164,7 +171,10 @@ public:
 
 			// hash var name.
 			var = FNV1a::get( entry->m_name );
-
+#if PropsToFile
+			// store var name to datamap file.
+			m_datamaps.push_back( map->m_name + std::string( XOR( "->" ) ) + entry->m_name );
+#endif
 			// if we dont have this var stored yet.
 			if ( !m_offsets[ base ][ var ].m_offset ) {
 				m_offsets[ base ][ var ].m_datamap_var = true;
@@ -172,6 +182,44 @@ public:
 				m_offsets[ base ][ var ].m_prop_ptr = nullptr;
 			}
 		}
+	}
+
+	// get datamap offset.
+	__forceinline size_t FindInDataMap( datamap_t* map, const std::string& name ) {
+		// sanity.
+		if ( !map || !map->m_size || map->m_size > 200 || !map->m_desc || !map->m_name )
+			return 0;
+
+		// Hash the datamap name
+		hash32_t base = FNV1a::get( map->m_name );
+
+		// Iterate over fields
+		for ( int i = 0; i < map->m_size; ++i ) {
+			const auto& desc = map->m_desc[ i ];
+
+			// Skip null field names
+			if ( !desc.m_name )
+				continue;
+
+			// Check if the field name matches.
+			if ( desc.m_name == name )
+				return desc.m_offset[ TD_OFFSET_NORMAL ];
+
+			// Check if the field type is embedded and recursively search.
+			if ( desc.m_type == FIELD_EMBEDDED && desc.m_td ) {
+				size_t offset = FindInDataMap( desc.m_td, name );
+				if ( offset != 0 )
+					return offset;
+			}
+		}
+
+		// Recursively check the base map if it exists.
+		if ( map->m_base ) {
+			return FindInDataMap( map->m_base, name );
+		}
+
+		// Return 0 if we didn't find the field.
+		return 0;
 	}
 
 	// get client id.

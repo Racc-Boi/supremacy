@@ -287,6 +287,7 @@ public:
 public:
 	// virtual indices
 	enum indices : size_t {
+		GETPREDICTIONDESCMAP = 17,
 		WORLDSPACECENTER = 78,
 		GETMAXHEALTH = 122,
 		ISPLAYER = 152,
@@ -295,6 +296,12 @@ public:
 
 public:
 	// virtuals.
+	
+	// datamap_t.
+	__forceinline datamap_t* GetPredictionDescMap( ) {
+		return util::get_method< datamap_t * ( __thiscall* )( void* ) >( this, GETPREDICTIONDESCMAP )( this );
+	}
+
 	// renderable table.
 	__forceinline void *renderable() {
 		return (void *)((uintptr_t)this + 0x4);
@@ -523,7 +530,8 @@ class Player : public Entity {
 public:
 	// netvars / etc.
 	__forceinline vec3_t &m_vecAbsVelocity() {
-		return get< vec3_t >(g_entoffsets.m_vecAbsVelocity);
+		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_vecAbsVelocity" ) );
+		return *reinterpret_cast< vec3_t* >( reinterpret_cast< std::uintptr_t >( this ) + offset );
 	}
 
 	__forceinline int &m_lifeState() {
@@ -535,7 +543,8 @@ public:
 	}
 
 	__forceinline int &m_MoveType() {
-		return get< int >(g_entoffsets.m_MoveType);
+		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_MoveType" ) );
+		return *reinterpret_cast< int* >( reinterpret_cast< std::uintptr_t >( this ) + offset );
 	}
 
 	__forceinline int &m_iHealth() {
@@ -555,7 +564,8 @@ public:
 	}
 
 	__forceinline ang_t &m_angAbsRotation() {
-		return get< ang_t >(g_entoffsets.m_angAbsRotation);
+		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_angAbsRotation" ) );
+		return *reinterpret_cast< ang_t* >( reinterpret_cast< std::uintptr_t >( this ) + offset );
 	}
 
 	__forceinline ang_t &m_angRotation() {
@@ -664,7 +674,8 @@ public:
 	}
 
 	__forceinline float &m_surfaceFriction() {
-		return get< float >(g_entoffsets.m_surfaceFriction);
+		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_surfaceFriction" ) );
+		return *reinterpret_cast< float* >( reinterpret_cast< std::uintptr_t >( this ) + offset );
 	}
 
 	__forceinline float &m_flFlashBangTime() {
@@ -700,7 +711,8 @@ public:
 	}
 
 	__forceinline int &m_iEFlags() {
-		return get< int >(g_entoffsets.m_iEFlags);
+		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_iEFlags" ) );
+		return *reinterpret_cast< int* >( reinterpret_cast< std::uintptr_t >( this ) + offset );
 	}
 
 	__forceinline float *m_flPoseParameter() {

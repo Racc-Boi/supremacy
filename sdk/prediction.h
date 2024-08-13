@@ -1,36 +1,73 @@
 #pragma once
 
+
 class CMoveData {
 public:
-	bool        m_bFirstRunOfFunctions : 1;
-	bool        m_bGameCodeMovedPlayer : 1;
-	bool        m_bNoAirControl : 1;
-	CBaseHandle m_nPlayerHandle;
-	int         m_nImpulseCommand;
-	ang_t       m_vecViewAngles;
-	ang_t       m_vecAbsViewAngles;
-	int         m_nButtons;
-	int         m_nOldButtons;
-	float       m_flForwardMove;
-	float       m_flSideMove;
-	float       m_flUpMove;
-	float       m_flMaxSpeed;
-	float       m_flClientMaxSpeed;
-	vec3_t      m_vecVelocity;
-	vec3_t      m_vecOldVelocity;
-	float       m_unknown;
-	ang_t       m_vecAngles;
-	ang_t       m_vecOldAngles;
-	float       m_outStepHeight;
-	vec3_t      m_outWishVel;
-	vec3_t      m_outJumpVel;
-	vec3_t      m_vecConstraintCenter;
-	float       m_flConstraintRadius;
-	float       m_flConstraintWidth;
-	float       m_flConstraintSpeedFactor;
-	bool        m_bConstraintPastRadius;
-	vec3_t      m_vecAbsOrigin;
+	bool			m_bFirstRunOfFunctions : 1;
+	bool			m_bGameCodeMovedPlayer : 1;
+	bool			m_bNoAirControl : 1;
+
+	CBaseHandle 	m_nPlayerHandle;	// edict index on server, client entity handle on client
+
+	int				m_nImpulseCommand;	// Impulse command issued.
+	ang_t			m_vecViewAngles;	// Command view angles (local space)
+	ang_t			m_vecAbsViewAngles;	// Command view angles (world space)
+	int				m_nButtons;			// Attack buttons.
+	int				m_nOldButtons;		// From host_client->oldbuttons;
+	float			m_flForwardMove;
+	float			m_flSideMove;
+	float			m_flUpMove;
+
+	float			m_flMaxSpeed;
+	float			m_flClientMaxSpeed;
+
+	// Variables from the player edict (sv_player) or entvars on the client.
+	// These are copied in here before calling and copied out after calling.
+	vec3_t			m_vecVelocity;			// edict::velocity		// Current movement direction.
+	vec3_t			m_vecTrailingVelocity;
+	float			m_flTrailingVelocityTime;
+	ang_t			m_vecAngles;			// edict::angles
+	ang_t			m_vecOldAngles;
+
+	// Output only
+	float			m_outStepHeight;	// how much you climbed this move
+	vec3_t			m_outWishVel;		// This is where you tried 
+	vec3_t			m_outJumpVel;		// This is your jump velocity
+
+	// Movement constraints	(radius 0 means no constraint)
+	vec3_t			m_vecConstraintCenter;
+	float			m_flConstraintRadius;
+	float			m_flConstraintWidth;
+	float			m_flConstraintSpeedFactor;
+	bool			m_bConstraintPastRadius;		///< If no, do no constraining past Radius.  If yes, cap them to SpeedFactor past radius
+
+	void			SetAbsOrigin( const vec3_t& vec );
+	const vec3_t&	GetAbsOrigin( ) const;
+
+private:
+	vec3_t			m_vecAbsOrigin;		// edict::origin
 };
+
+inline const vec3_t& CMoveData::GetAbsOrigin( ) const {
+	return m_vecAbsOrigin;
+}
+
+#if !defined( CLIENT_DLL ) && defined( _DEBUG )
+// We only ever want this code path on the server side in a debug build
+//  and you have to uncomment the code below and rebuild to have the test operate.
+//#define PLAYER_GETTING_STUCK_TESTING
+
+#endif
+
+#if !defined( PLAYER_GETTING_STUCK_TESTING )
+
+// This is implemented with a more exhaustive test in gamemovement.cpp.  We check if the origin being requested is
+//  inside solid, which it never should be
+inline void CMoveData::SetAbsOrigin( const vec3_t& vec ) {
+	m_vecAbsOrigin = vec;
+}
+
+#endif
 
 class IMoveHelper {
 public:
@@ -108,7 +145,7 @@ public:
 	CGlobalVarsBase	m_saved_vars;
 
 	bool			m_player_origin_type_description_searched;
-	CUtlVector< const typedescription_t* >	m_player_origin_type_description; // A vector in cases where the .x, .y, and .z are separately listed
+	CUtlVector< const typedescription_t* >	m_player_origin_type_description; // A vec3_t in cases where the .x, .y, and .z are separately listed
 
 	void* m_p_dump_panel;
 public:

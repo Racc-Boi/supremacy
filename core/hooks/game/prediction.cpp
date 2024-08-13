@@ -35,7 +35,9 @@ bool Hooks::InPrediction( ) {
 void Hooks::RunCommand( Entity* ent, CUserCmd* cmd, IMoveHelper* movehelper ) {
 	// airstuck jitter / overpred fix.
 	if( cmd->m_tick >= std::numeric_limits< int >::max( ) )
-		return;
+		return;	
+
+	g_csgo.m_move_helper = movehelper;
 
 	g_hooks.m_prediction.GetOldMethod< RunCommand_t >( CPrediction::RUNCOMMAND )( this, ent, cmd, movehelper );
 

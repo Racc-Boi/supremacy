@@ -175,7 +175,7 @@ void InputPrediction::repredict( ) {
 	ang_t m_angle;
 	g_csgo.m_prediction->GetLocalViewAngles( m_angle );
 	m_prediction_data.data.m_vecOldAngles = m_angle;
-	m_prediction_data.data.m_vecAbsOrigin = g_cl.m_local->m_vecOrigin( );
+	m_prediction_data.data.SetAbsOrigin( g_cl.m_local->m_vecOrigin( ) );
 	m_prediction_data.data.m_vecVelocity = g_cl.m_local->m_vecVelocity( );
 
 	//{
@@ -244,7 +244,7 @@ void InputPrediction::restore( ) {
 	g_csgo.m_prediction->m_split[ GET_ACTIVE_SPLITSCREEN_SLOT( ) ].m_first_time_predicted = m_prediction_data.m_first_time_predicted;
 
 	// restore move data.
-	m_prediction_data.data.m_vecAbsOrigin = g_cl.m_local->GetAbsOrigin( );
+	m_prediction_data.data.SetAbsOrigin( g_cl.m_local->GetAbsOrigin( ) );
 	m_prediction_data.data.m_vecVelocity = g_cl.m_local->m_vecAbsVelocity( );
 	m_prediction_data.data.m_vecOldAngles = m_prediction_data.data.m_vecAngles;
 }

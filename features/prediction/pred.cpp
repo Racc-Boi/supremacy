@@ -198,7 +198,7 @@ void InputPrediction::repredict( ) {
 	//VPROF_SCOPE_BEGIN( "moveHelper->ProcessImpacts(cl)" );
 	//moveHelper->ProcessImpacts( );
 	//VPROF_SCOPE_END( );
-	g_csgo.m_move_helper->ProcessImpacts( );
+	//g_csgo.m_move_helper->ProcessImpacts( );
 
 	g_cl.m_local->PostThink( );
 

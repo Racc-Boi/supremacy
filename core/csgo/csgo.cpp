@@ -196,7 +196,6 @@ bool CSGO::init( ) {
     // g_netvars stores all netvar offsets into an unordered_map, EntOffsets is for the raw offset values so we don't have to access the unordered_map a bunch.
 	g_netvars.init( );
     g_entoffsets.init( );
-
 	g_listener.init( );
 	render::init( );
 	g_menu.init( );

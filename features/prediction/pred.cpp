@@ -33,7 +33,7 @@ void InputPrediction::run( ) {
 	if ( !g_cl.m_processing )
 		return;
 
-	// backup original tickbase
+	// backup original tickbase.
 	m_prediction_data.m_old_tick = g_cl.m_local->m_nTickBase( );
 
 	// backup globals.
@@ -44,7 +44,7 @@ void InputPrediction::run( ) {
 	m_prediction_data.m_in_prediction = g_csgo.m_prediction->m_in_prediction;
 	m_prediction_data.m_first_time_predicted = g_csgo.m_prediction->m_split[ GET_ACTIVE_SPLITSCREEN_SLOT( ) ].m_first_time_predicted;
 
-	// set host player
+	// set host player.
 	// note: this is called before CPrediction::RunCommand.
 	g_csgo.m_move_helper->SetHost( g_cl.m_local );
 
@@ -230,6 +230,10 @@ void InputPrediction::restore( ) {
 
 	if ( !g_cl.m_processing )
 		return;
+
+	// reset host player.
+	// note: this is called after CPrediction::RunCommand.
+	g_csgo.m_move_helper->SetHost( nullptr );
 
 	// restore globals.
 	g_csgo.m_globals->m_curtime   = m_prediction_data.m_curtime;

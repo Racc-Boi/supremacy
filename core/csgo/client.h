@@ -87,6 +87,7 @@ public:
 	int      m_server_tick;
 	int      m_arrival_tick;
 	int      m_width, m_height;
+	int		 m_sequence_number;
 
 	// usercommand variables.
 	CUserCmd* m_cmd;

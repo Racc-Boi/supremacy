@@ -79,7 +79,6 @@ public:
 	CRender *m_render;
 	IMemAlloc *m_mem_alloc;
 	IClientShadowMgr *m_shadow_mgr;
-	// IClientEntityListener** m_entity_listeners;
 	CHud *m_hud;
 	C_CSGameRules *m_gamerules;
 	IViewRenderBeams *m_beams;
@@ -166,6 +165,10 @@ public:
 	int *m_nPredictionRandomSeed;
 	Player *m_pPredictionPlayer;
 
+	Address CheckHasThinkFunction;
+	Address PhysicsRunThink;
+	Address PostThinkVPhysics;
+	Address SimulatePlayerSimulatedEntities;
 public:
 	// initialize class.
 	bool init();

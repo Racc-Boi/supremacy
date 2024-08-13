@@ -171,16 +171,19 @@ public:
 
 			// hash var name.
 			var = FNV1a::get( entry->m_name );
-#if PropsToFile
-			// store var name to datamap file.
-			m_datamaps.push_back( map->m_name + std::string( XOR( "->" ) ) + entry->m_name );
-#endif
+
 			// if we dont have this var stored yet.
 			if ( !m_offsets[ base ][ var ].m_offset ) {
 				m_offsets[ base ][ var ].m_datamap_var = true;
 				m_offsets[ base ][ var ].m_offset = ( size_t )entry->m_offset[ TD_OFFSET_NORMAL ];
 				m_offsets[ base ][ var ].m_prop_ptr = nullptr;
 			}
+
+#if PropsToFile
+// store var name to datamap file and offset of the var.
+			m_datamaps.push_back( map->m_name + std::string( XOR( "->" ) ) + entry->m_name );
+			m_datamaps.push_back( std::to_string( entry->m_offset[ TD_OFFSET_NORMAL ] ) );
+#endif
 		}
 	}
 

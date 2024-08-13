@@ -11,7 +11,6 @@ public:
 	// prototypes.
 	using PaintTraverse_t              = void( __thiscall* )( void*, VPANEL, bool, bool );
 	using DoPostScreenSpaceEffects_t   = bool( __thiscall* )( void*, CViewSetup* );
-	using CreateMove_t                 = bool( __thiscall* )( void*, float, CUserCmd* );
 	using LevelInitPostEntity_t        = void( __thiscall* )( void* );
 	using LevelShutdown_t              = void( __thiscall* )( void* );
 	using LevelInitPreEntity_t         = void( __thiscall* )( void*, const char* );
@@ -59,7 +58,6 @@ public:
 	bool                     TempEntities( void *msg );
 	void                     PaintTraverse( VPANEL panel, bool repaint, bool force );
 	bool                     DoPostScreenSpaceEffects( CViewSetup* setup );
-	bool                     CreateMove( float input_sample_time, CUserCmd* cmd );
 	void                     LevelInitPostEntity( );
 	void                     LevelShutdown( );
 	//int                      IN_KeyEvent( int event, int key, const char* bind );

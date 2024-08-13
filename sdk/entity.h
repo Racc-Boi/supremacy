@@ -425,6 +425,14 @@ public:
 	__forceinline bool is(hash32_t hash) {
 		return g_netvars.GetClientID(hash) == get_class_id();
 	}
+
+	__forceinline vec3_t GetPreviouslyPredictedOrigin( ) {
+		return get< vec3_t >( g_entoffsets.m_vecPreviouslyPredictedOrigin );
+	}
+
+	__forceinline vec3_t GetNetworkOrigin( ) {
+		return get< vec3_t >( g_entoffsets.m_vecNetworkOrigin );
+	}
 };
 
 class CCSGOPlayerAnimState {
@@ -540,6 +548,14 @@ public:
 
 	__forceinline int &m_fFlags() {
 		return get< int >(g_entoffsets.m_fFlags);
+	}
+
+	__forceinline int m_nSequence( ) {
+		return get< int >( g_entoffsets.m_nSequence );
+	}
+
+	__forceinline float& m_flFallVelocity( ) {
+		return get< float >( g_entoffsets.m_flFallVelocity );
 	}
 
 	__forceinline int &m_MoveType() {
@@ -744,6 +760,39 @@ public:
 		return (CBaseHandle *)((uintptr_t)this + g_entoffsets.m_hMyWeapons);
 	}
 
+	__forceinline int& m_nNextThinkTick( ) {
+		return get< int >( g_entoffsets.m_nNextThinkTick );
+	}
+
+	__forceinline int& m_afButtonForced( ) {
+		return get< int >( g_entoffsets.m_afButtonForced );
+	}
+
+	__forceinline int& m_nButtons( ) {
+		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_nButtons" ) );
+		return *reinterpret_cast< int* >( reinterpret_cast< std::uintptr_t >( this ) + offset );
+	}
+
+	__forceinline int& m_afButtonLast( ) {
+		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_afButtonLast" ) );
+		return *reinterpret_cast< int* >( reinterpret_cast< std::uintptr_t >( this ) + offset );
+	}
+
+	__forceinline int& m_afButtonPressed( ) {
+		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_afButtonPressed" ) );
+		return *reinterpret_cast< int* >( reinterpret_cast< std::uintptr_t >( this ) + offset );
+	}
+
+	__forceinline int& m_afButtonReleased( ) {
+		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_afButtonReleased" ) );
+		return *reinterpret_cast< int* >( reinterpret_cast< std::uintptr_t >( this ) + offset );
+	}
+
+	__forceinline int& m_nImpulse( ) {
+		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_nImpulse" ) );
+		return *reinterpret_cast< int* >( reinterpret_cast< std::uintptr_t >( this ) + offset );
+	}
+
 	__forceinline C_AnimationLayer *m_AnimOverlay() {
 		// .text:1017EAB1 08C    8B 47 1C                mov     eax, [edi+1Ch]
 		// .text:1017EAB4 08C    8D 0C D5 00 00 00 00    lea     ecx, ds:0[ edx * 8 ]; Load Effective Address
@@ -779,8 +828,13 @@ public:
 		UPDATECLIENTSIDEANIMATION = 218, // 55 8B EC 51 56 8B F1 80 BE ? ? ? ? ? 74 36
 		GETACTIVEWEAPON = 262,
 		GETEYEPOS = 163,
+		THINK = 137,
+		SETSEQUENCE = 213, // 56 57 8B F9 8B 0D ? ? ? ? F6 87 ? ? ? ? ?
+		STUDIOFRAMEADVANCE = 214, // 56 57 8B F9 8B 0D ? ? ? ? F6 87 ? ? ? ? ?
+		PRETHINK = 307,
 		GETFOV = 321,
-		UPDATECOLLISIONBOUNDS = 329 // 56 57 8B F9 8B 0D ? ? ? ? F6 87 ? ? ? ? ?
+		UPDATECOLLISIONBOUNDS = 329, // 56 57 8B F9 8B 0D ? ? ? ? F6 87 ? ? ? ? ?
+		SETLOCALVIEWANGLES = 361
 	};
 
 public:
@@ -845,6 +899,64 @@ public:
 				}
 			}
 		}
+	}
+
+	__forceinline void SetLocalViewAngles( ang_t& angle ) {
+		return util::get_method< void( __thiscall* )( void*, ang_t& ) >( this, SETLOCALVIEWANGLES )( this, angle );
+	}
+
+	__forceinline void PreThink( ) {
+		return util::get_method< void( __thiscall* )( decltype( this ) ) >( this, PRETHINK )( this );
+	}
+
+	__forceinline void CheckHasThinkFunction( bool isThinking ) {
+		using CheckHasThinkFunction_t = void( __thiscall* )( void*, bool );
+		return g_csgo.CheckHasThinkFunction.as< CheckHasThinkFunction_t >( )( this, isThinking );
+	}
+
+	__forceinline void Think( ) {
+		return util::get_method< void( __thiscall* )( decltype( this ) ) >( this, THINK )( this );
+	}
+
+	// think function handling
+	enum thinkmethods_t {
+		THINK_FIRE_ALL_FUNCTIONS,
+		THINK_FIRE_BASE_ONLY,
+		THINK_FIRE_ALL_BUT_BASE,
+	};
+
+	__forceinline bool PhysicsRunThink( thinkmethods_t thinkMethod = THINK_FIRE_ALL_FUNCTIONS ) {
+		using PhysicsRunThink_t = bool( __thiscall* )( void*, thinkmethods_t );
+		return g_csgo.PhysicsRunThink.as< PhysicsRunThink_t >( )( this, thinkMethod );
+	}
+
+	__forceinline void SetSequence( int nSequence ) {
+		return util::get_method< void( __thiscall* )( void*, int ) >( this, SETSEQUENCE )( this, nSequence );
+	}
+
+	__forceinline void StudioFrameAdvance( ) {
+		return util::get_method< void( __thiscall* )( void* ) >( this, STUDIOFRAMEADVANCE )( this );
+	}
+
+	__forceinline void PostThink( ) {
+		using PostThinkVPhysics_t = bool( __thiscall* )( void* );
+		using SimulatePlayerSimulatedEntities_t = void( __thiscall* )( void* );
+
+		if ( alive( ) ) {
+			UpdateCollisionBounds( );
+
+			if ( m_fFlags( ) & FL_ONGROUND )
+				m_flFallVelocity( ) = 0.f;
+
+			if ( m_nSequence( ) == -1 )
+				SetSequence( 0 );
+
+			StudioFrameAdvance( );
+			g_csgo.PostThinkVPhysics.as< PostThinkVPhysics_t >( )( this );
+		}
+
+		// Even if dead simulate entities
+		g_csgo.SimulatePlayerSimulatedEntities.as< SimulatePlayerSimulatedEntities_t >( )( this );
 	}
 
 	__forceinline vec3_t GetShootPosition() {
@@ -968,7 +1080,7 @@ public:
 
 		return false;
 	}
-	
+
 	__forceinline bool IsArmored( int nHitGroup );
 	__forceinline float ScaleDamage( float flWpnArmorRatio, int group, float fDamage );
 	__forceinline int FireBullet( vec3_t vecSrc, const ang_t& shootAngles, float flArmorRatio, float flDistance, float flPenetration, int& nPenetrationCount, int& iDamage, float flRangeModifier, Player* pVictim, CGameTrace& tr );

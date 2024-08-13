@@ -29,9 +29,9 @@ namespace util {
 		return u.out;
 	};
 
-	template < typename t = Address >
+    template < typename t = Address >
 	__forceinline static t get_method( Address this_ptr, size_t index ) {
-		return ( t )this_ptr.to< t* >( )[ index ];
+		return static_cast< t >( this_ptr.to<t*>( )[ index ] );
 	}
 
 	// get base ptr ( EBP (x86_32) / RBP (x86_64) ).

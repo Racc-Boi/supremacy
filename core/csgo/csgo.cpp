@@ -115,7 +115,6 @@ bool CSGO::init( ) {
 	m_render             = pattern::find( m_engine_dll, XOR( "A1 ? ? ? ? B9 ? ? ? ? FF 75 0C FF 75 08 FF 50 0C" ) ).add( 1 ).get< CRender* >( );
 	m_shadow_mgr         = pattern::find( m_client_dll, XOR( "A1 ? ? ? ? FF 90 ? ? ? ? 6A 00" ) ).add( 1 ).get( ).as< IClientShadowMgr* >( );
 	m_view_render        = pattern::find( m_client_dll, XOR( "8B 0D ? ? ? ? 8B 01 FF 50 4C 8B 06" ) ).add( 2 ).get< CViewRender* >( 2 );
-	// m_entity_listeners   = pattern::find( m_client_dll, XOR( "B9 ? ? ? ? E8 ? ? ? ? 5E 5D C2 04" ) ).add( 0x1 ).get< IClientEntityListener** >( 2 );
 	m_hud                = pattern::find( m_client_dll, XOR( "B9 ? ? ? ? 0F 94 C0 0F B6 C0 50 68" ) ).add( 0x1 ).get( ).as< CHud* >( );
 	m_gamerules          = pattern::find( m_client_dll, XOR( "8B 0D ? ? ? ? E8 ? ? ? ? 84 C0 75 6B" ) ).add( 0x2 ).get< C_CSGameRules* >( );
 	m_beams              = pattern::find( m_client_dll, XOR( "8D 04 24 50 A1 ? ? ? ? B9" ) ).add( 0x5 ).get< IViewRenderBeams* >( );
@@ -166,6 +165,10 @@ bool CSGO::init( ) {
 	LastBoneSetupTime               = InvalidateBoneCache.add( 0x11 ).to< size_t >( );
 	MostRecentModelBoneCounter      = InvalidateBoneCache.add( 0x1B ).to< size_t >( );
 	CLMove							= pattern::find( m_engine_dll, XOR( "55 8B EC 81 EC ? ? ? ? 53 56 57 8B 3D ? ? ? ? 8A" ) );
+	CheckHasThinkFunction			= pattern::find( m_client_dll, XOR( "55 8B EC 56 57 8B F9 8B B7 E4 00 00 00 8B C6 C1 E8 16" ) );
+	PhysicsRunThink					= pattern::find( m_client_dll, XOR( "55 8B EC 83 EC 10 53 56 57 8B F9 8B 87 E4" ) );
+	PostThinkVPhysics				= pattern::find( g_csgo.m_client_dll, XOR( "55 8B EC 83 E4 F8 81 EC ? ? ? ? 53 8B D9 56 57 83 BB" ) );
+	SimulatePlayerSimulatedEntities = pattern::find( g_csgo.m_client_dll, XOR( "56 8B F1 57 8B BE ? ? ? ? 83 EF 01 78 72 90 8B 86" ) );
 
 	// exported functions.
 	RandomSeed  = PE::GetExport( m_vstdlib_dll, HASH( "RandomSeed" ) ).as< RandomSeed_t >( );

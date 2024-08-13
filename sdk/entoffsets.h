@@ -120,6 +120,12 @@ public:
 	XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_flAbsYaw;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_flConstraintRadius;
     XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_hMyWeapons;
+    XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_vecPreviouslyPredictedOrigin;
+	XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_vecNetworkOrigin;
+	XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_afButtonForced;
+	XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_nNextThinkTick;
+	XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_nSequence;
+	XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_flFallVelocity;
 
     void init( ) {
         // initialize a xored netvar.
@@ -211,10 +217,12 @@ public:
 		INIT_XOREDNETVAR( m_flAbsYaw,					HASH( "DT_CSRagdoll" ),			   HASH( "m_flAbsYaw" ) );
         INIT_XOREDNETVAR( m_flConstraintRadius,			HASH( "DT_CSPlayer" ),             HASH( "m_flConstraintRadius" ) );
         INIT_XOREDNETVAR( m_hMyWeapons,			        HASH( "DT_CSPlayer" ),             HASH( "m_hMyWeapons" ) );
+		INIT_XOREDNETVAR( m_flFallVelocity,             HASH( "DT_BasePlayer" ),           HASH( "m_flFallVelocity" ) );
 
         INIT_XOREDNETVAR_SPECIFIC( m_flOldSimulationTime,        g_netvars.get( HASH( "DT_BaseEntity" ),       HASH( "m_flSimulationTime" ) ) + sizeof( float ) );
         INIT_XOREDNETVAR_SPECIFIC( m_CustomMaterials,            g_netvars.get( HASH( "DT_BaseCombatWeapon" ), HASH( "m_Item" ) ) + 0x14 );
         INIT_XOREDNETVAR_SPECIFIC( m_VisualsDataProcessors,      g_netvars.get( HASH( "DT_BaseCombatWeapon" ), HASH( "m_Item" ) ) + 0x220 );
+		INIT_XOREDNETVAR_SPECIFIC( m_afButtonForced,             g_netvars.get( HASH( "DT_BasePlayer" ), HASH( "m_hViewEntity" ) ) - sizeof( long long ) );
         INIT_XOREDNETVAR_SPECIFIC( m_vecOldOrigin,               0x3A8 );
         INIT_XOREDNETVAR_SPECIFIC( m_fEffects,                   0xEC );
         INIT_XOREDNETVAR_SPECIFIC( m_bReadyToDraw,               0x270 );
@@ -226,6 +234,10 @@ public:
         INIT_XOREDNETVAR_SPECIFIC( m_BoneCache,                  0x2900 );
         INIT_XOREDNETVAR_SPECIFIC( m_CustomMaterials2,           0x9DC );
         INIT_XOREDNETVAR_SPECIFIC( m_bCustomMaterialInitialized, 0x32DD );
+        INIT_XOREDNETVAR_SPECIFIC( m_vecPreviouslyPredictedOrigin,0x357C );
+        INIT_XOREDNETVAR_SPECIFIC( m_vecNetworkOrigin,           0x134 );
+		INIT_XOREDNETVAR_SPECIFIC( m_nNextThinkTick,             0xF8 );
+        INIT_XOREDNETVAR_SPECIFIC( m_nSequence,                  0x28AC );
 
         // don't want these macros outside of this file.
         #undef INIT_XOREDNETVAR

@@ -23,10 +23,11 @@ void __cdecl Detour::CL_Move( float accumulated_extra_samples, bool bFinalTick )
 	if ( !g_csgo.m_engine->IsInGame( ) )
 		return cl_Move( accumulated_extra_samples, bFinalTick );
 
+	// set final packet.
 	g_cl.m_final_packet = &bFinalTick;
 
-	// call original.
-	cl_Move( accumulated_extra_samples, bFinalTick );
+	// allow original cl_move code to run.
+	return cl_Move( accumulated_extra_samples, bFinalTick );
 }
 
 static void __stdcall CreateMove( int seq_number, float input_sample_frame_time, bool active, bool& send_packet ) {
@@ -44,6 +45,9 @@ static void __stdcall CreateMove( int seq_number, float input_sample_frame_time,
 
 	// get bSendPacket off the stack.
 	g_cl.m_packet = &send_packet;
+
+	// set sequence number.
+	g_cl.m_sequence_number = seq_number;
 
 	// invoke move function.
 	g_cl.OnTick( cmd );

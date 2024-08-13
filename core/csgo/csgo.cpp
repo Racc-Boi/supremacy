@@ -129,7 +129,6 @@ bool CSGO::init( ) {
 	m_input       = util::get_method( m_client, CHLClient::INACTIVATEMOUSE ).at< CInput* >( 0x1 );
 
 	// functions.
-	MD5_PseudoRandom                = pattern::find( m_client_dll, XOR( "55 8B EC 83 E4 F8 83 EC 70 6A 58" ) ).as< MD5_PseudoRandom_t >( );
 	SetAbsAngles                    = pattern::find( m_client_dll, XOR( "55 8B EC 83 E4 F8 83 EC 64 53 56 57 8B F1 E8" ) );
 	InvalidateBoneCache             = pattern::find( m_client_dll, XOR( "80 3D ? ? ? ? ? 74 16 A1 ? ? ? ? 48 C7 81" ) );
 	LockStudioHdr                   = pattern::find( m_client_dll, XOR( "55 8B EC 51 53 8B D9 56 57 8D B3" ) );

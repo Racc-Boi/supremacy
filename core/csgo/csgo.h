@@ -6,7 +6,6 @@ class C_CSGameRules;
 
 class CSGO {
 public:
-	using MD5_PseudoRandom_t = uint32_t(__thiscall *)(uint32_t);
 	using GetGlowObjectManager_t = CGlowObjectManager * (__cdecl *)();
 	using RandomSeed_t = void(__cdecl *)(int);
 	using RandomInt_t = int(__cdecl *)(int, int);
@@ -119,7 +118,6 @@ public:
 public:
 	// functions.
 	GetGlowObjectManager_t   GetGlowObjectManager;
-	MD5_PseudoRandom_t	     MD5_PseudoRandom;
 	Address                  SetAbsAngles;
 	Address				     SetAbsOrigin;
 	Address                  InvalidateBoneCache;

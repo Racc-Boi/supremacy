@@ -16,7 +16,7 @@ public:
 	// ctors.
 	__forceinline Color( ) : m_rgba{ 0 } { }
 	__forceinline Color( int r, int g, int b, int a = 255 ) : m_r{ ( uint8_t )r }, m_g{ ( uint8_t )g }, m_b{ ( uint8_t )b }, m_a{ ( uint8_t )a } { }
-	__forceinline Color( uint32_t rgba ) : m_rgba{ rgba & 0x00FFFFFF } { } // Mask the alpha channel to prevent exceeding 255
+	__forceinline Color( uint32_t rgba ) : m_rgba{ rgba } { }
 
 	static Color hsl_to_rgb( float h, float s, float l ) {
 		float q;

@@ -69,10 +69,10 @@ void Chams::SetupMaterial( IMaterial* mat, Color col, bool z_flag ) {
 
 void Chams::init( ) {
 	// find stupid materials.
-	debugambientcube = g_csgo.m_material_system->FindMaterial( XOR( "debug/debugambientcube" ), XOR( "Model textures" ) );
+	debugambientcube = g_csgo.m_material_system->FindMaterial( XOR( "debug/debugambientcube" ) );
 	debugambientcube->IncrementReferenceCount( );
 
-	debugdrawflat = g_csgo.m_material_system->FindMaterial( XOR( "debug/debugdrawflat" ), XOR( "Model textures" ) );
+	debugdrawflat = g_csgo.m_material_system->FindMaterial( XOR( "debug/debugdrawflat" ) );
 	debugdrawflat->IncrementReferenceCount( );
 }
 

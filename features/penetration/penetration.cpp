@@ -156,6 +156,9 @@ static bool TraceToExit( vec3_t start, vec3_t dir, vec3_t& end, CGameTrace& trEn
 }
 
 bool Player::IsArmored( int nHitGroup ) {
+    if ( !this )
+        return false;
+
     bool bApplyArmor = false;
 
     if ( m_ArmorValue( ) > 0 ) {
@@ -181,6 +184,9 @@ bool Player::IsArmored( int nHitGroup ) {
 }
 
 float Player::ScaleDamage( float flWpnArmorRatio, int group, float fDamage ) {
+    if ( !this )
+        return 0.0f;
+
     float flArmorBonus = 0.5f;
     float fDamageToHealth = fDamage;
     float fDamageToArmor = 0;
@@ -316,7 +322,7 @@ bool penetration::run( PenetrationInput_t* in, PenetrationOutput_t* out ) {
     if ( in->m_target ) {
         if ( iHitgroup > HITGROUP_GENERIC ) {
             out->m_damage = iDamage;
-            out->m_hitgroup = iHitgroup;
+            out->m_hitgroup = ( weapon->m_iItemDefinitionIndex( ) == ZEUS ) ? HITGROUP_GENERIC : iHitgroup;
             out->m_pen = iPenCount;
 			out->m_target = in->m_target;
 
@@ -340,7 +346,7 @@ bool penetration::run( PenetrationInput_t* in, PenetrationOutput_t* out ) {
         out->m_damage = iDamage;
 
         if ( iHitgroup > HITGROUP_GENERIC ) {
-            out->m_hitgroup = iHitgroup;
+            out->m_hitgroup = ( weapon->m_iItemDefinitionIndex( ) == ZEUS ) ? HITGROUP_GENERIC : iHitgroup;
             out->m_target = trace.m_entity->as<Player*>( );
 
             if ( iDamage > trace.m_entity->as<Player*>( )->m_iHealth( ) )
@@ -370,6 +376,8 @@ int Player::FireBullet(
     float flRangeModifier, // damage range modifier
     Player* pVictim,
     CGameTrace& tr ) {
+    if ( !this )
+		return -1;
 
     // Check for player hitboxes extending outside their collision bounds
     constexpr float rayExtension = 40.0f;
@@ -491,6 +499,9 @@ bool Player::HandleBulletPenetration( float& flPenetration,
                                       float flDistance,
                                       float flCurrentDistance,
                                       float& fCurrentDamage ) {
+    if ( !this )
+        return false;
+
     // NOTE: not thread-safe
     if ( !ff_damage_reduction_bullets )
         ff_damage_reduction_bullets = g_csgo.m_cvar->FindVar( HASH( "ff_damage_reduction_bullets" ) );

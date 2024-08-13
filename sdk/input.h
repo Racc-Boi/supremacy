@@ -69,7 +69,7 @@ public:
 			return *this;
 
 		m_command_number   = src.m_command_number;
-		m_tick       = src.m_tick;
+		m_tick			   = src.m_tick;
 		m_view_angles      = src.m_view_angles;
 		m_aimdirection     = src.m_aimdirection;
 		m_forward_move     = src.m_forward_move;
@@ -91,6 +91,29 @@ public:
 
 	__forceinline CUserCmd( const CUserCmd& src ) {
 		*this = src;
+	}
+
+	CRC32_t GetChecksum( ) const {
+		CRC32_t hashCRC = 0UL;
+
+		CRC32::init( &hashCRC );
+		CRC32::processBuffer( &hashCRC, &m_command_number, sizeof( m_command_number ) );
+		CRC32::processBuffer( &hashCRC, &m_tick, sizeof( m_tick ) );
+		CRC32::processBuffer( &hashCRC, &m_view_angles, sizeof( m_view_angles ) );
+		CRC32::processBuffer( &hashCRC, &m_aimdirection, sizeof( m_aimdirection ) );
+		CRC32::processBuffer( &hashCRC, &m_forward_move, sizeof( m_forward_move ) );
+		CRC32::processBuffer( &hashCRC, &m_side_move, sizeof( m_side_move ) );
+		CRC32::processBuffer( &hashCRC, &m_up_move, sizeof( m_up_move ) );
+		CRC32::processBuffer( &hashCRC, &m_buttons, sizeof( m_buttons ) );
+		CRC32::processBuffer( &hashCRC, &m_impulse, sizeof( m_impulse ) );
+		CRC32::processBuffer( &hashCRC, &m_weapon_select, sizeof( m_weapon_select ) );
+		CRC32::processBuffer( &hashCRC, &m_weapon_subtype, sizeof( m_weapon_subtype ) );
+		CRC32::processBuffer( &hashCRC, &m_random_seed, sizeof( m_random_seed ) );
+		CRC32::processBuffer( &hashCRC, &m_mousedx, sizeof( m_mousedx ) );
+		CRC32::processBuffer( &hashCRC, &m_mousedy, sizeof( m_mousedy ) );
+		CRC32::final( &hashCRC );
+
+		return hashCRC;
 	}
 
 	// virtual dtor.
@@ -194,5 +217,9 @@ public:
 
 	__forceinline CUserCmd* GetUserCmd( int sequence_number ) {
 		return util::get_method< CUserCmd*( __thiscall* )( decltype( this ), int, int ) >( this, GETUSERCMD )( this, -1, sequence_number );
+	}
+
+	__forceinline CVerifiedUserCmd* GetVerifiedCmd( const int sequenceNumber ) const {
+		return &m_verified[ sequenceNumber % MULTIPLAYER_BACKUP ];
 	}
 };

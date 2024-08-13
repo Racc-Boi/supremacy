@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{099DE97A-54D6-47DE-A760-7CA4184D45DB}</ProjectGuid>
     <RootNamespace>supremacy_csgo</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -37,6 +37,8 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <VCToolsVersion>
+    </VCToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEx|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -71,8 +73,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>
-    </LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>.\output\release\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEx|Win32'">
@@ -100,6 +101,11 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Cpp0xSupport>true</Cpp0xSupport>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <StringPooling>
+      </StringPooling>
+      <EnableEnhancedInstructionSet>
+      </EnableEnhancedInstructionSet>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -122,20 +128,23 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <CompileAs>CompileAsCpp</CompileAs>
       <PreprocessorDefinitions>NDEBUG;SUPREMACY_CSGO_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <DebugInformationFormat>None</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointModel>Precise</FloatingPointModel>
       <StringPooling>true</StringPooling>
       <Cpp0xSupport>true</Cpp0xSupport>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <ConformanceMode>Default</ConformanceMode>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+      <SubSystem>
+      </SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEx|Win32'">
@@ -198,6 +207,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="core\hooks\detours.h" />
+    <ClInclude Include="sdk\crc32.h" />
     <ClInclude Include="util\address.h" />
     <ClInclude Include="features\aim\aimbot.h" />
     <ClInclude Include="sdk\angle.h" />
@@ -234,6 +245,7 @@
     <ClInclude Include="sdk\glow.h" />
     <ClInclude Include="features\visuals\grenades.h" />
     <ClInclude Include="core\gui\gui.h" />
+    <ClInclude Include="util\detourhook.h" />
     <ClInclude Include="util\hash.h" />
     <ClInclude Include="core\hooks\hooks.h" />
     <ClInclude Include="sdk\hud.h" />
@@ -252,6 +264,14 @@
     <ClInclude Include="sdk\matrix.h" />
     <ClInclude Include="sdk\memalloc.h" />
     <ClInclude Include="core\gui\menu.h" />
+    <ClInclude Include="util\minhook\buffer.h" />
+    <ClInclude Include="util\minhook\hde\hde32.h" />
+    <ClInclude Include="util\minhook\hde\hde64.h" />
+    <ClInclude Include="util\minhook\hde\pstdint.h" />
+    <ClInclude Include="util\minhook\hde\table32.h" />
+    <ClInclude Include="util\minhook\hde\table64.h" />
+    <ClInclude Include="util\minhook\minhook.h" />
+    <ClInclude Include="util\minhook\trampoline.h" />
     <ClInclude Include="util\modules.h" />
     <ClInclude Include="features\movement\movement.h" />
     <ClInclude Include="core\gui\elements\multidropdown.h" />
@@ -292,6 +312,7 @@
     <ClInclude Include="util\xorstr.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="core\hooks\detours.cpp" />
     <ClCompile Include="features\aim\aimbot.cpp" />
     <ClCompile Include="features\bones\bonesetup.cpp" />
     <ClCompile Include="core\gui\elements\button.cpp" />
@@ -326,6 +347,7 @@
     <ClCompile Include="features\shots\shots.cpp" />
     <ClCompile Include="features\skins\skins.cpp" />
     <ClCompile Include="core\hooks\game\surface.cpp" />
+    <ClCompile Include="sdk\crc32.cpp" />
     <ClCompile Include="util\math.cpp" />
     <ClCompile Include="features\movement\movement.cpp" />
     <ClCompile Include="core\gui\elements\multidropdown.cpp" />
@@ -336,6 +358,11 @@
     <ClCompile Include="core\hooks\player.cpp" />
     <ClCompile Include="features\prediction\pred.cpp" />
     <ClCompile Include="core\hooks\game\netchannel.cpp" />
+    <ClCompile Include="util\minhook\buffer.c" />
+    <ClCompile Include="util\minhook\hde\hde32.c" />
+    <ClCompile Include="util\minhook\hde\hde64.c" />
+    <ClCompile Include="util\minhook\hook.c" />
+    <ClCompile Include="util\minhook\trampoline.c" />
     <ClCompile Include="util\render.cpp" />
     <ClCompile Include="core\hooks\game\viewrender.cpp" />
     <ClCompile Include="features\resolver\resolver.cpp" />

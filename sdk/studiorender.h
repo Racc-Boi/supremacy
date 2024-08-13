@@ -224,8 +224,8 @@ public:
 	//	return util::get_method< IMaterial*( __thiscall* )( void*, const char*, KeyValues* ) >( this, CREATEMATERIAL )( this, name, kv );
 	//}
 
-	__forceinline IMaterial* FindMaterial( const char* name, char *type ) {
-		return  util::get_method< IMaterial*( __thiscall* )( void *, const char*, char*, bool, void* ) >( this, FINDMATERIAL )( this, name, type, 1, 0 );
+	__forceinline IMaterial* FindMaterial( const char* name ) {
+		return  util::get_method< IMaterial*( __thiscall* )( void *, const char*, char*, bool, void* ) >( this, FINDMATERIAL )( this, name, nullptr, 1, 0 );
 	}
 
 	__forceinline uint16_t FirstMaterial( ) {

@@ -1,5 +1,3 @@
-#pragma once
-
 class Color {
 private:
 	// easy reinterpret.
@@ -18,7 +16,7 @@ public:
 	// ctors.
 	__forceinline Color( ) : m_rgba{ 0 } { }
 	__forceinline Color( int r, int g, int b, int a = 255 ) : m_r{ ( uint8_t )r }, m_g{ ( uint8_t )g }, m_b{ ( uint8_t )b }, m_a{ ( uint8_t )a } { }
-	__forceinline Color( uint32_t rgba ) : m_rgba{ rgba } { }
+	__forceinline Color( uint32_t rgba ) : m_rgba{ rgba & 0x00FFFFFF } { } // Mask the alpha channel to prevent exceeding 255
 
 	static Color hsl_to_rgb( float h, float s, float l ) {
 		float q;
@@ -73,12 +71,12 @@ public:
 
 namespace colors {
 	static Color white{ 255, 255, 255, 255 };
-    static Color black{ 0, 0, 0, 255 };
+	static Color black{ 0, 0, 0, 255 };
 	static Color red{ 255, 0, 0, 255 };
 	static Color burgundy{ 0xff2d00b3 };
-    static Color light_blue{ 95, 174, 227, 255 };
-    static Color orange{ 243, 156, 18, 255 };
-    static Color transparent_green{ 0, 255, 0, 200 };
-    static Color transparent_yellow{ 255, 255, 0, 200 };
-    static Color transparent_red{ 255, 0, 0, 200 };
+	static Color light_blue{ 95, 174, 227, 255 };
+	static Color orange{ 243, 156, 18, 255 };
+	static Color transparent_green{ 0, 255, 0, 200 };
+	static Color transparent_yellow{ 255, 255, 0, 200 };
+	static Color transparent_red{ 255, 0, 0, 200 };
 }

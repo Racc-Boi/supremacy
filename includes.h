@@ -58,6 +58,8 @@ using ulong_t = unsigned long;
 #include "util/nt.h"
 #include "util/x86.h"
 #include "util/syscall.h"
+#include "util/minhook/minhook.h"
+#include "util/detourhook.h"
 
 // hack includes.
 #include "core/csgo/interfaces.h"
@@ -70,6 +72,7 @@ using ulong_t = unsigned long;
 #include "core/csgo/client.h"
 #include "sdk/gamerules.h"
 #include "core/hooks/hooks.h"
+#include "core/hooks/detours.h"
 #include "util/render.h"
 #include "features/prediction/pred.h"
 #include "features/lagcomp/lagrecord.h"

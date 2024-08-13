@@ -35,6 +35,7 @@ struct CBaseTrace;
 #include "engineclient.h"
 #include "cvar.h"
 #include "globalvars.h"
+#include "crc32.h"
 #include "input.h"
 #include "surface.h"
 #include "glow.h"

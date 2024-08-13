@@ -148,6 +148,7 @@ public:
 	ClearNotices_t           ClearNotices;
 	AddListenerEntity_t      AddListenerEntity;
 	GetShotgunSpread_t       GetShotgunSpread;
+	Address					 CLMove;
 
 	size_t BoneAccessor;
 	size_t AnimOverlay;

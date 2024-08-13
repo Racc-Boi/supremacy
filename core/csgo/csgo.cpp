@@ -165,6 +165,7 @@ bool CSGO::init( ) {
     CTraceFilterSkipTwoEntities_vmt = pattern::find( m_client_dll, XOR( "E8 ? ? ? ? F3 0F 10 84 24 ? ? ? ? 8D 84 24 ? ? ? ? F3 0F 58 44 24" ) ).rel32( 1 ).add( 0x59 ).to( );
 	LastBoneSetupTime               = InvalidateBoneCache.add( 0x11 ).to< size_t >( );
 	MostRecentModelBoneCounter      = InvalidateBoneCache.add( 0x1B ).to< size_t >( );
+	CLMove							= pattern::find( m_engine_dll, XOR( "55 8B EC 81 EC ? ? ? ? 53 56 57 8B 3D ? ? ? ? 8A" ) );
 
 	// exported functions.
 	RandomSeed  = PE::GetExport( m_vstdlib_dll, HASH( "RandomSeed" ) ).as< RandomSeed_t >( );
@@ -200,6 +201,7 @@ bool CSGO::init( ) {
 	g_config.LoadHotkeys( );
 	g_chams.init( );
 	g_hooks.init( );
+	Detour::init( );
 
     // if we injected and we're ingame, run map load func.
 	if( m_engine->IsInGame( ) ) {

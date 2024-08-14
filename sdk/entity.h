@@ -951,8 +951,8 @@ public:
 	}
 
 	__forceinline void PostThink( ) {
-		using PostThinkVPhysics_t = bool( __thiscall* )( void* );
-		using SimulatePlayerSimulatedEntities_t = void( __thiscall* )( void* );
+		using PostThinkVPhysics_t = bool( __thiscall* )( Entity* );
+		using SimulatePlayerSimulatedEntities_t = void( __thiscall* )( Entity* );
 
 		if ( alive( ) ) {
 			UpdateCollisionBounds( );

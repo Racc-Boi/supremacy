@@ -46,7 +46,5 @@ void Hooks::RunCommand( Entity* ent, CUserCmd* cmd, IMoveHelper* movehelper ) {
 		return player->SetAbsOrigin( player->m_vecOrigin( ) );
 	}
 
-	g_csgo.m_move_helper = movehelper;
-
 	g_hooks.m_prediction.GetOldMethod< RunCommand_t >( CPrediction::RUNCOMMAND )( this, ent, cmd, movehelper );
 }

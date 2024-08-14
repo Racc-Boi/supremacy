@@ -203,6 +203,14 @@ void InputPrediction::repredict( ) {
 	g_cl.m_local->PostThink( );
 
 	g_csgo.m_game_movement->FinishTrackPredictionErrors( g_cl.m_local );
+}
+
+void InputPrediction::restore( ) {
+	if ( !g_csgo.m_globals || !g_csgo.m_prediction )
+		return;
+
+	if ( !g_cl.m_processing )
+		return;
 
 	/*void CPrediction::FinishCommand( C_BasePlayer * player ) {
 #if !defined( NO_ENTITY_PREDICTION )
@@ -222,14 +230,6 @@ void InputPrediction::repredict( ) {
 	if ( !g_csgo.m_prediction->m_engine_paused && g_csgo.m_globals->m_frametime > 0 ) {
 		g_cl.m_local->m_nTickBase( )++;
 	}
-}
-
-void InputPrediction::restore( ) {
-	if ( !g_csgo.m_globals || !g_csgo.m_prediction )
-		return;
-
-	if ( !g_cl.m_processing )
-		return;
 
 	// reset host player.
 	// note: this is called after CPrediction::RunCommand.

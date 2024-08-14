@@ -109,6 +109,7 @@ bool CSGO::init( ) {
 	//cl_lagcompensation->m_flags &= ~FCVAR_NOT_CONNECTED;
 
 	// classes by sig.
+	m_move_helper		 = pattern::find( m_client_dll, XOR( "8B 0D ? ? ? ? 8B 46 08 68" ) ).add( 2 ).get< IMoveHelper* >( 2 );
     m_cl                 = **reinterpret_cast< CClientState *** > ( ( *reinterpret_cast< uintptr_t ** > ( m_engine ) )[ 12 ] + 0x10 );
 	m_game               = pattern::find( m_engine_dll, XOR( "A1 ? ? ? ? B9 ? ? ? ? FF 75 08 FF 50 34" ) ).add( 1 ).get< CGame* >( );
 	m_render             = pattern::find( m_engine_dll, XOR( "A1 ? ? ? ? B9 ? ? ? ? FF 75 0C FF 75 08 FF 50 0C" ) ).add( 1 ).get< CRender* >( );

@@ -2,8 +2,7 @@
 
 NetData g_netdata{};;
 
-void NetData::store( ) {
-    int          tickbase;
+void NetData::store( int m_command_number ) {
     StoredData_t *data;
 
 	if( !g_cl.m_processing ) {
@@ -11,19 +10,16 @@ void NetData::store( ) {
 		return;
 	}
 
-    tickbase = g_cl.m_local->m_nTickBase( );
-
     // get current record and store data.
-    data = &m_data[ tickbase % MULTIPLAYER_BACKUP ];
+    data = &m_data[ m_command_number % MULTIPLAYER_BACKUP ];
     
-    data->m_tickbase    = tickbase;
+    data->m_tickbase    = g_cl.m_local->m_nTickBase( );
     data->m_punch       = g_cl.m_local->m_aimPunchAngle( );
     data->m_punch_vel   = g_cl.m_local->m_aimPunchAngleVel( );
 	data->m_view_offset = g_cl.m_local->m_vecViewOffset( );
 }
 
-void NetData::apply( ) {
-    int          tickbase;
+void NetData::apply( int m_command_number ) {
     StoredData_t *data;
     ang_t        punch_delta, punch_vel_delta;
 	vec3_t       view_delta;
@@ -33,10 +29,8 @@ void NetData::apply( ) {
 		return;
 	}
 
-    tickbase = g_cl.m_local->m_nTickBase( );
-    
     // get current record and validate.
-    data = &m_data[ tickbase % MULTIPLAYER_BACKUP ];
+    data = &m_data[ m_command_number % MULTIPLAYER_BACKUP ];
 
     if( g_cl.m_local->m_nTickBase( ) != data->m_tickbase )
     	return;

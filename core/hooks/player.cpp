@@ -73,6 +73,33 @@ Weapon *Hooks::GetActiveWeapon( ) {
     return g_hooks.m_GetActiveWeapon( this );
 }
 
+void Hooks::PhysicsSimulate( ) {
+	Player* player = reinterpret_cast< Player* >( this );
+	if ( !player || !player->alive( ) || !player->m_bIsLocalPlayer( ) )
+		return g_hooks.m_PhysicsSimulate( this );
+
+	int m_simulation_tick = *reinterpret_cast< int* >( reinterpret_cast< uint32_t >( player ) + 0x2A8 ); // can be gotten from ResetSimulationTick
+	if ( m_simulation_tick == g_csgo.m_globals->m_tick_count )
+		return;
+	
+	CCommandContext* m_command_context = reinterpret_cast< CCommandContext* >( reinterpret_cast< uint32_t >( player ) + 0x34D0 ); // can be gotten from CPrediction::RunSimulation
+	if ( !m_command_context ||
+		 !m_command_context->m_needs_processing )
+		return;
+
+	int m_command_number = m_command_context->m_command_number - 1;
+
+	// restore non-compressed netvars.
+	g_netdata.apply( m_command_number );
+
+	g_hooks.m_PhysicsSimulate( this );
+
+	m_command_number = m_command_context->m_command_number;
+
+	// store non compressed netvars.
+	g_netdata.store( m_command_number );
+}
+
 void CustomEntityListener::OnEntityCreated( Entity *ent ) {
     if( ent ) {
         // player created.
@@ -99,6 +126,7 @@ void CustomEntityListener::OnEntityCreated( Entity *ent ) {
 		        	g_hooks.m_UpdateClientSideAnimation = vmt->add< Hooks::UpdateClientSideAnimation_t >( Player::UPDATECLIENTSIDEANIMATION, util::force_cast( &Hooks::UpdateClientSideAnimation ) );
                     g_hooks.m_GetActiveWeapon           = vmt->add< Hooks::GetActiveWeapon_t >( Player::GETACTIVEWEAPON, util::force_cast( &Hooks::GetActiveWeapon ) );
                     g_hooks.m_BuildTransformations      = vmt->add< Hooks::BuildTransformations_t >( Player::BUILDTRANSFORMATIONS, util::force_cast( &Hooks::BuildTransformations ) );
+					g_hooks.m_PhysicsSimulate			= vmt->add< Hooks::PhysicsSimulate_t >( Player::PHYSICSSIMULATE, util::force_cast( &Hooks::PhysicsSimulate ) );
                 }
             }
         }

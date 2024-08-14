@@ -84,9 +84,6 @@ void Hooks::FrameStageNotify( Stage_t stage ) {
 	}
 
 	else if( stage == FRAME_NET_UPDATE_POSTDATAUPDATE_START ) {
-		// restore non-compressed netvars.
-		// g_netdata.apply( );
-
 		g_skins.think( );
 	}
 
@@ -95,9 +92,6 @@ void Hooks::FrameStageNotify( Stage_t stage ) {
 	}
 
 	else if( stage == FRAME_NET_UPDATE_END ) {
-        // restore non-compressed netvars.
-		g_netdata.apply( );
-
 		// update all players.
 		for( int i{ 1 }; i <= g_csgo.m_globals->m_max_clients; ++i ) {
 			Player* player = g_csgo.m_entlist->GetClientEntity< Player* >( i );

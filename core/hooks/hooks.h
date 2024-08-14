@@ -20,6 +20,7 @@ public:
     using GetActiveWeapon_t            = Weapon*( __thiscall * )( void* );
 	using DoExtraBoneProcessing_t      = void( __thiscall* )( void*, int, int, int, int, int, int );
 	using BuildTransformations_t       = void( __thiscall* )( void*, int, int, int, int, int, int );
+	using PhysicsSimulate_t			   = void( __thiscall* )( void* );
 	using CalcViewModelView_t          = void( __thiscall* )( void*, vec3_t&, ang_t& );
 	using InPrediction_t               = bool( __thiscall* )( void* );
 	using OverrideView_t               = void( __thiscall* )( void*, CViewSetup* );
@@ -65,6 +66,7 @@ public:
 	void                     FrameStageNotify( Stage_t stage );
 	void                     UpdateClientSideAnimation( );
     Weapon*                  GetActiveWeapon( );
+	void					 PhysicsSimulate( );
 	bool                     InPrediction( );
 	bool                     ShouldDrawParticles( );
 	bool                     ShouldDrawFog( );
@@ -131,6 +133,7 @@ public:
 	UpdateClientSideAnimation_t m_UpdateClientSideAnimation;
     GetActiveWeapon_t           m_GetActiveWeapon;
 	BuildTransformations_t      m_BuildTransformations;
+	PhysicsSimulate_t			m_PhysicsSimulate;
 
 	// netvar proxies.
 	RecvVarProxy_t m_Pitch_original;

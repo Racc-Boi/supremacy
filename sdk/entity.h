@@ -211,6 +211,13 @@ struct RenderableInstance_t {
 	__forceinline RenderableInstance_t() : m_alpha{ 255ui8 } {}
 };
 
+class CCommandContext {
+public:
+	bool m_needs_processing;
+	CUserCmd m_cmd;
+	int m_command_number;
+};
+
 class Entity {
 public:
 	// helper methods.
@@ -822,6 +829,7 @@ public:
 	enum indices : size_t {
 		GETREFEHANDLE = 2,
 		TESTHITBOXES = 52,
+		PHYSICSSIMULATE = 149,
 		BUILDTRANSFORMATIONS = 184,
 		DOEXTRABONEPROCESSING = 192,
 		STANDARDBLENDINGRULES = 200,

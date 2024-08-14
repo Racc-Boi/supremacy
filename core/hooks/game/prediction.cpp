@@ -33,14 +33,20 @@ bool Hooks::InPrediction( ) {
 }
 
 void Hooks::RunCommand( Entity* ent, CUserCmd* cmd, IMoveHelper* movehelper ) {
-	// airstuck jitter / overpred fix.
-	if( cmd->m_tick >= std::numeric_limits< int >::max( ) )
-		return;	
+	Player* player = reinterpret_cast< Player* >( ent );
+	if ( !player || !player->m_bIsLocalPlayer( ) )
+		return 	g_hooks.m_prediction.GetOldMethod< RunCommand_t >( CPrediction::RUNCOMMAND )( this, ent, cmd, movehelper );
+
+	if ( cmd->m_tick >= ( g_csgo.m_globals->m_tick_count + std::round( 1 / g_csgo.m_globals->m_interval ) + 8 ) ) {
+		cmd->m_predicted = true;
+
+		if ( !g_csgo.m_prediction->m_engine_paused && g_csgo.m_globals->m_frametime > 0.f )
+			g_cl.m_local->m_nTickBase( )++;
+
+		return player->SetAbsOrigin( player->m_vecOrigin( ) );
+	}
 
 	g_csgo.m_move_helper = movehelper;
 
 	g_hooks.m_prediction.GetOldMethod< RunCommand_t >( CPrediction::RUNCOMMAND )( this, ent, cmd, movehelper );
-
-	// store non compressed netvars.
-	g_netdata.store( );
 }

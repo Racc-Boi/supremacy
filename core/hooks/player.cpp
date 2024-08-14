@@ -98,6 +98,10 @@ void Hooks::PhysicsSimulate( ) {
 
 	// store non compressed netvars.
 	g_netdata.store( m_command_number );
+
+	// fix pred errors when we are crouching.
+	if ( player->m_vphysicsCollisionState( ) != 0 ) // VPHYS_WALK
+		player->m_vphysicsCollisionState( ) = 0;
 }
 
 void CustomEntityListener::OnEntityCreated( Entity *ent ) {

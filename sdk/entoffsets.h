@@ -126,6 +126,7 @@ public:
 	XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_nNextThinkTick;
 	XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_nSequence;
 	XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_flFallVelocity;
+	XoredNetvar< GET_XOR_KEYUI32, __COUNTER__ > m_vphysicsCollisionState;
 
     void init( ) {
         // initialize a xored netvar.
@@ -218,6 +219,7 @@ public:
         INIT_XOREDNETVAR( m_flConstraintRadius,			HASH( "DT_CSPlayer" ),             HASH( "m_flConstraintRadius" ) );
         INIT_XOREDNETVAR( m_hMyWeapons,			        HASH( "DT_CSPlayer" ),             HASH( "m_hMyWeapons" ) );
 		INIT_XOREDNETVAR( m_flFallVelocity,             HASH( "DT_BasePlayer" ),           HASH( "m_flFallVelocity" ) );
+		INIT_XOREDNETVAR( m_vphysicsCollisionState,     HASH( "DT_BasePlayer" ),           HASH( "m_vphysicsCollisionState" ) );
 
         INIT_XOREDNETVAR_SPECIFIC( m_flOldSimulationTime,        g_netvars.get( HASH( "DT_BaseEntity" ),       HASH( "m_flSimulationTime" ) ) + sizeof( float ) );
         INIT_XOREDNETVAR_SPECIFIC( m_CustomMaterials,            g_netvars.get( HASH( "DT_BaseCombatWeapon" ), HASH( "m_Item" ) ) + 0x14 );

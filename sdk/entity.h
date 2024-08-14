@@ -565,6 +565,10 @@ public:
 		return get< float >( g_entoffsets.m_flFallVelocity );
 	}
 
+	__forceinline int& m_vphysicsCollisionState( ) {
+		return get< int >( g_entoffsets.m_vphysicsCollisionState );
+	}
+
 	__forceinline int &m_MoveType() {
 		const auto offset = g_netvars.FindInDataMap( this->GetPredictionDescMap( ), XOR( "m_MoveType" ) );
 		return *reinterpret_cast< int* >( reinterpret_cast< std::uintptr_t >( this ) + offset );

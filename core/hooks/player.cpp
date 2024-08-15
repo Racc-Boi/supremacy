@@ -123,14 +123,14 @@ void CustomEntityListener::OnEntityCreated( Entity *ent ) {
 		        vmt->init( player );
 
 		        // hook this on every player.
-		        g_hooks.m_DoExtraBoneProcessing = vmt->add< Hooks::DoExtraBoneProcessing_t >( Player::DOEXTRABONEPROCESSING, util::force_cast( &Hooks::DoExtraBoneProcessing ) );
+		        g_hooks.m_DoExtraBoneProcessing = vmt->add< Hooks::DoExtraBoneProcessing_t >( Player::DOEXTRABONEPROCESSING, util::force_cast< Hooks::DoExtraBoneProcessing_t >( &Hooks::DoExtraBoneProcessing ) );
 
 		        // local gets special treatment.
 		        if( player->index( ) == g_csgo.m_engine->GetLocalPlayer( ) ) {
-		        	g_hooks.m_UpdateClientSideAnimation = vmt->add< Hooks::UpdateClientSideAnimation_t >( Player::UPDATECLIENTSIDEANIMATION, util::force_cast( &Hooks::UpdateClientSideAnimation ) );
-                    g_hooks.m_GetActiveWeapon           = vmt->add< Hooks::GetActiveWeapon_t >( Player::GETACTIVEWEAPON, util::force_cast( &Hooks::GetActiveWeapon ) );
-                    g_hooks.m_BuildTransformations      = vmt->add< Hooks::BuildTransformations_t >( Player::BUILDTRANSFORMATIONS, util::force_cast( &Hooks::BuildTransformations ) );
-					g_hooks.m_PhysicsSimulate			= vmt->add< Hooks::PhysicsSimulate_t >( Player::PHYSICSSIMULATE, util::force_cast( &Hooks::PhysicsSimulate ) );
+		        	g_hooks.m_UpdateClientSideAnimation = vmt->add< Hooks::UpdateClientSideAnimation_t >( Player::UPDATECLIENTSIDEANIMATION, util::force_cast< Hooks::UpdateClientSideAnimation_t >( &Hooks::UpdateClientSideAnimation ) );
+                    g_hooks.m_GetActiveWeapon           = vmt->add< Hooks::GetActiveWeapon_t >( Player::GETACTIVEWEAPON, util::force_cast< Hooks::GetActiveWeapon_t >( &Hooks::GetActiveWeapon ) );
+                    g_hooks.m_BuildTransformations      = vmt->add< Hooks::BuildTransformations_t >( Player::BUILDTRANSFORMATIONS, util::force_cast< Hooks::BuildTransformations_t >( &Hooks::BuildTransformations ) );
+					g_hooks.m_PhysicsSimulate			= vmt->add< Hooks::PhysicsSimulate_t >( Player::PHYSICSSIMULATE, util::force_cast< Hooks::PhysicsSimulate_t >( &Hooks::PhysicsSimulate ) );
                 }
             }
         }

@@ -46,6 +46,9 @@ void Form::draw_tabs( ) {
 	// draw the background.
 	draw_background( tabs_area.x, tabs_area.y, tabs_area.w, tabs_area.h, { 17, 17, 17, m_alpha } );
 
+	Color color = g_gui.m_color;
+	color.a( ) = m_alpha;
+
 	// iterate tabs.
 	for ( size_t i = 0; i < m_tabs.size( ); ++i ) {
 		// get the tab.
@@ -53,7 +56,7 @@ void Form::draw_tabs( ) {
 
 		// draw the tab title.
 		render::menu_shade.string( tabs_area.x + 10, tabs_area.y + 5 + ( i * 16 ),
-								   t == m_active_tab ? g_gui.m_color : Color{ 152, 152, 152, m_alpha },
+								   t == m_active_tab ? color : Color{ 152, 152, 152, m_alpha },
 								   t->m_title );
 	}
 }

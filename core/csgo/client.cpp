@@ -109,8 +109,8 @@ void Client::OnMapload( ) {
 	if( g_csgo.m_net ) {
 		g_hooks.m_net_channel.reset( );
 		g_hooks.m_net_channel.init( g_csgo.m_net );
-		g_hooks.m_net_channel.add( INetChannel::PROCESSPACKET, util::force_cast( &Hooks::ProcessPacket ) );
-		g_hooks.m_net_channel.add( INetChannel::SENDDATAGRAM, util::force_cast( &Hooks::SendDatagram ) );
+		g_hooks.m_net_channel.add( INetChannel::PROCESSPACKET, util::force_cast< Hooks::ProcessPacket_t >( &Hooks::ProcessPacket ) );
+		g_hooks.m_net_channel.add( INetChannel::SENDDATAGRAM, util::force_cast< Hooks::SendDatagram_t >( &Hooks::SendDatagram ) );
 	}
 }
 

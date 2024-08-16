@@ -844,6 +844,7 @@ public:
 		SETSEQUENCE = 213, // 56 57 8B F9 8B 0D ? ? ? ? F6 87 ? ? ? ? ?
 		STUDIOFRAMEADVANCE = 214, // 56 57 8B F9 8B 0D ? ? ? ? F6 87 ? ? ? ? ?
 		PRETHINK = 307,
+		SELECTITEM = 318,
 		GETFOV = 321,
 		UPDATECOLLISIONBOUNDS = 329, // 56 57 8B F9 8B 0D ? ? ? ? F6 87 ? ? ? ? ?
 		SETLOCALVIEWANGLES = 361
@@ -969,6 +970,10 @@ public:
 
 		// Even if dead simulate entities
 		g_csgo.SimulatePlayerSimulatedEntities.as< SimulatePlayerSimulatedEntities_t >( )( this );
+	}
+
+	__forceinline void SelectItem( const char* pstr, int iSubType = 0 ) {
+		return util::get_method< void( __thiscall* )( void*, const char*, int ) >( this, SELECTITEM )( this, pstr, iSubType );
 	}
 
 	__forceinline vec3_t GetShootPosition() {

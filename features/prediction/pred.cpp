@@ -125,6 +125,21 @@ void InputPrediction::repredict( ) {
 	// start track prediction errors
 	g_csgo.m_game_movement->StartTrackPredictionErrors( g_cl.m_local );
 
+	//// Do weapon selection
+	//if ( ucmd->weaponselect != 0 ) {
+	//	C_BaseCombatWeapon* weapon = ToBaseCombatWeapon( CBaseEntity::Instance( ucmd->weaponselect ) );
+	//	if ( weapon ) {
+	//		player->SelectItem( weapon->GetName( ), ucmd->weaponsubtype );
+	//	}
+	//}
+	if ( g_cl.m_cmd->m_weapon_select != 0 ) {
+		Weapon* weapon = g_csgo.m_entlist->GetClientEntity< Weapon* >( g_cl.m_cmd->m_weapon_select );
+		if ( WeaponInfo* weaponData = weapon->GetWpnData( );
+			 weapon ) {
+			g_cl.m_local->SelectItem( weaponData->m_weapon_name, g_cl.m_cmd->m_weapon_subtype );
+		}
+	}
+
 	//// Latch in impulse.
 	//IClientVehicle* pVehicle = player->GetVehicle( );
 	//if ( ucmd->impulse ) {

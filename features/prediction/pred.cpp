@@ -19,9 +19,9 @@ void InputPrediction::update( ) {
 		auto cl_move_clamp = pattern::find( g_csgo.m_engine_dll, XOR( "B8 ? ? ? ? 3B F0 0F 4F F0 89 5D FC" ) ) + 1;
 		unsigned long protect = 0;
 
-		VirtualProtect( ( void* )cl_move_clamp, 4, PAGE_EXECUTE_READWRITE, &protect );
+		g_winapi.VirtualProtect( reinterpret_cast< void* >( cl_move_clamp ), 4, PAGE_EXECUTE_READWRITE, &protect );
 		*( std::uint32_t* )cl_move_clamp = 62;
-		VirtualProtect( ( void* )cl_move_clamp, 4, protect, &protect );
+		g_winapi.VirtualProtect( reinterpret_cast< void* >( cl_move_clamp ), 4, protect, &protect );
 		unlocked_fakelag = true;
 	}
 }
